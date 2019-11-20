@@ -1,0 +1,132 @@
+---
+layout:     post
+title:      "踩过的那些坑"
+subtitle:   "web之路,坑洼无数"
+date:       2017-11-9 16:11:30
+author:     "Thq"
+header-img: "img/post-bg-alitrip.jpg"
+catalog: true
+tags:
+    - HTML
+    - JavaScript
+    - CSS
+---
+
+# 前言
+献给那些被我踩过的坑,愿你们在这能够安息 o_O
+
+*setInterval的参数问题*
+<br>setInterval(func(),1000) 和 setInterval(func,1000) 这两种写法,谁对谁错呢？
+<br>都不报错！前者只执行一次，后者才是我们要的效果！前者直接将func()函数执行了，而参数要的是函数对象，所以我们只需要传递func对象就行了。setTimeout同理啊，要是将圆括号带上的话，并不会等待指定几秒才执行，而是立即执行了。
+*在主页面如何获取iframe中的元素呢*
+<br>知道的就挺简单的了。
+<br>获取window：document.getElementsByTagName('iframe')[0].contentWindow; 
+<br>获取document：在window上window.document
+*document.getElementsByxxxx()得到的‘数组’*
+<br>不能用forEach和for in进行遍历,因为该数组是一个类数组对象，但不是真正的数组。需要先转化为数组，不会转就乖乖用for循环吧
+<br>es6中可以使用Array.from(arr);进行转化为数组
+<br>es5中转化方法 Array.prototype.slice.call(arr); 或者 [].slice.call(arr);
+
+
+```
+overflow: visible;
+left: 50%;
+transform: translateX(-50%)
+```
+
+> 常见的一些方法
+
+*将数组打乱*
+```
+arr.sort(() => {return Math.random - 0.5});
+```
+# webpack的坑
+
+extrenals(外部扩展): {
+	ECharts: 'echarts'
+};
+value需要跟cdn中export的名字一样，且key和value不能一样
+
+## toLocaleDateString()
+对这个函数不是特别熟悉，也不知道能传参数，所以踩了一个坑。
+当时取得当前时间用的方法是new Date().toLacaleDateString()，在chrome内的表现是 => 2018/xx/xx 
+感觉没有毛病，所以就直接用上了。结果测试反应在部分手机上显示的时间不对，有的显示为2018年xx月xx天，而有的
+又显示为xx/xx/2018，很困惑，后来经指点才发现，toLacaleDateString()有参数，而且在不同的系统不同的时区下的返回结果都是不一样的。
+下面列举了chrome、ff、ie的三种不同的表现形式。
+![图片](/img/in-post/trap/browser.png)
+使用locales和options返回指定的时间格式
+![图片](/img/in-post/trap/locales-options.png)
+所以以后在使用这个函数的时候留个心眼
+
+## element.scrollToView
+
+## [...Array(100).keys()] 0-99的整数数组 
+
+## setTimeout 最低为4ms
+
+## 简单的数组元素统计
+```
+array.reduce((obj, item) => {
+	if(!obj[item]) {
+		obj[item] = 0;
+	}
+	obj[item]++;
+	return obj;
+}, {});
+```
+
+# Array
+
+## Array.prototype.every
+```
+const all = (arr, fn = Boolean) => arr.every(fn);
+all([1,2,0]) // false  将数组中的项做if判断
+all([1,2,3], x => x > 1) true
+```
+```
+const allEqual = arr => arr.every(val => val === arr[0]);
+```
+
+## Array.prototype.some
+const any = (arr, fn = Boolean) => arr.some(fn);
+```
+any([0,0,1]) // true
+any([1,2,3], x => x === 3) // true
+```
+
+> 长度11位随机id
+Math.random().toString(36).substring(2)
+
+> 用字符串返回一个键盘图形
+```
+(_=>[..."`1234567890-=~~QWERTYUIOP[]\\~ASDFGHJKL;'~~ZXCVBNM,./~"].map(x=>(o+=`/${b='_'.repeat(w=x<y?2:' 667699'[x=["BS","TAB","CAPS","ENTER"][p++]||'SHIFT',p])}\\|`,m+=y+(x+'    ').slice(0,w)+y+y,n+=y+b+y+y,l+=' __'+b)[73]&&(k.push(l,m,n,o),l='',m=n=o=y),m=n=o=y='|',p=l=k=[])&&k.join`
+`)()
+```
+
+> IE10下 location中没有origin字段
+
+> h5 ios input 解决办法
+```
+focus => 
+handleIosKeyBoardBug() {
+  if (isIos()) {
+    let counter = 0;
+    let interval = setInterval(() => {
+      document.body.scrollTop = document.body.scrollHeight;
+      counter++;
+      if (counter === 6) {
+        clearInterval(interval);
+      }
+    }, 100);
+  }
+}
+blur => 
+window.scroll(0, 0)
+```
+
+可以把letter-space设为font-size的两倍来实现文本倒序排列
+
+```
+// 取的一个数的a~b位 eg. func(123456, 1, 4);  3456
+var func = (num, a, b) => {return (num / (Math.pow(10, a-1))) % 
+```

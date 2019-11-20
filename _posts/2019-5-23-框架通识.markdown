@@ -1,0 +1,26 @@
+---
+layout:     post
+title:      "框架通识"
+subtitle:   ""
+date:       2019-05-23 11:37:04
+author:     "Thq"
+header-img: "img/contact-bg.jpg"
+catalog: true
+tags:
+    - Vue
+---
+
+> Vue的父组件和子组件的生命周期钩子执行顺序
+父beforeCreated => 父created => 父beforeMounted => 子beforeCreated => 子created => 子beforeMounted => 子mounted => 父mounted 
+其他destory update同理
+
+> 监听子组件的生命周期
+
+```
+<child @hook:mounted="childMounted" />
+```
+
+> Vue监听页面刷新
+
+<p>在beforeDestory的生命周期钩子监听不到，可以通过window.onunLoad或者window.onbeforeunload事件监听到</p>
+

@@ -1,0 +1,240 @@
+---
+layout:     post
+title:      "CSS——进阶之路"
+subtitle:   "you don't know css"
+date:       2018-08-14 18:05:04
+author:     "Thq" 
+header-img: "img/contact-bg.jpg"
+catalog: true
+tags:
+    - CSS
+    - SASS
+---
+
+# 减少代码重复性
+```
+// bad
+.test {
+	border: 1px solid red;
+}
+
+.test:before {
+	border-left-color: red;
+}
+
+// beteer 
+.test {
+	border: 1px solid red;
+}
+.test:before {
+	border-left-color: inherit; // 继承
+}
+
+// bad 
+background: url(tr.png) no-repeat top left / 2em 2em,
+            url(tl.png) no-repeat top left / 2em 2em,
+            url(br.png) no-repeat bottom right / 2em 2em;
+
+// better 
+background: url(tl.png) top left,
+            url(tr.png) top right,  
+            url(bl.png) bottom left;
+background-repeat: no-repeat;
+backgronud-size: 2em 2em;
+```
+
+# 适当的过渡效果
+```
+// bad
+input:not(:focus) + .poptips {
+	display: none;
+}
+input:focus + .poptips {
+	display: block;
+}
+
+// better  cubic-bezier(找个时间好好研究一下子)
+input:not(:focus) + .poptips {
+	transform: scale(0);
+	transition: transform .25s cubic-bezier(.25, .1, .25, .1);
+}
+input:focus + .poptips {
+	transform: scale(1);
+    transition: transform .4s cubic-bezier(.29, .15, .5, 1.46);
+}
+```
+
+# background-clip: padding-box
+当设置透明的边框(border)的时候,背景颜色会渗透到边框下面,导致边框的颜色被覆盖掉,可以通过background-clip: padding-box;来改变默认行为.
+
+# box-shadow	
+一般在用box-shadow的时候只会用一层,比如:box-shadow: 1px 1px 1px 5px blue;
+但是box-shadow还可以这样用：效果就像箭靶一样
+```
+.border {
+	margin: 100px;
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+	box-shadow: 0 0 0 10px red,
+				0 0 0 20px blue,
+				0 0 0 30px orange,
+				0 0 0 40px lightblue;
+	background: yellow;
+}
+```
+![箭靶](https://thumb.ibb.co/hVtxGU/image.png);
+
+# 不规则投影
+利用border的一些属性来达到效果。
+drop-shadow是阴影而box-shadow是盒阴影.
+下面的例子用drop-shadow就能使得尖角也有阴影,如果使用box-shadow就不会有。
+使用box-shadow
+![box-shadow](https://image.ibb.co/dyBjVz/image.png);
+使用filter: drop-shadow
+![filter: drop-shadow](https://image.ibb.co/hFbwce/image.png);
+```
+  .projection {
+    width: 228px; height: 180px;
+    margin-bottom: 29px;
+    background: #b4a078;
+    position: relative;
+    border-radius: 5px;
+    filter: drop-shadow(2px 2px 2px rgba(180,160,120,.9));
+  }
+ .projection:before{
+    content: '';
+    position: absolute;
+    width: 0; height: 0;
+    top: 65px; right: -20px;
+    border: 22px solid transparent;
+    border-left-color: #b4a078;
+    border-right-width: 0;
+  }
+  ```
+  
+# CSS中的长度单位
+(1) 相对长度单位
+<li>相对字体长度单位： em rem</li>
+<li>相对视区绝对单位： vh vw</li>
+(2) 绝对长度单位: px pt   
+
+> 菱形图片（非正方形图片）
+```
+.shape2 {
+    margin: 50px;
+    width: 128px;
+    height: 128px;
+    overflow: hidden;
+}
+.shape2 > img {
+    max-width: 100%;
+    clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+    transition: 1s clip-path;
+}       
+.shape2 > img:hover {
+    clip-path: polygon(0 0, 100% 0,100% 100%, 0 100%);
+}
+```
+
+> 偷学 改变图片颜色
+
+<p>使用background-blend-mode混合模式，局限底色白色，主色黑色</p>
+```
+background-image: url($img), linear-gradient(#f00, #00f);
+background-blend-mode: lighten;
+background-size: cover;
+```
+
+<p>图片混合</p>
+```
+.container {
+    width: 400px;
+    height: 500px;
+    margin: 20px auto;
+    background: url('https://user-images.githubusercontent.com/8554143/34369102-3ea353ac-eaf4-11e7-9d27-f7d28c6a66f6.jpg'), url('https://user-images.githubusercontent.com/8554143/34369175-c14ae23e-eaf4-11e7-96f1-e146e5e5a96b.jpg');
+    background-size: cover;
+    background-blend-mode: lighten;
+}
+```
+
+## SASS 
+> 自己不常用的一些用法
+
+### @extend 继承
+```
+.class1 {
+    border: 1px solid red;
+}
+
+.class2 {
+    @extend .class1;
+}
+```
+
+### @mixin @include
+
+@mixin可以指定参数和缺省值
+```
+@mixin left($value: 10px) {
+    float: left;
+    margin-right: $value;
+}
+
+div {
+    @include left(20px);
+}
+```
+
+### 高阶用法
+
+条件语句 @if  @else
+```
+@if [exp] {
+    // css
+    } @else {
+        // css
+    }
+```
+
+循环语句
+```
+@for $i from 1 to 10 {
+    .border-#{$i} {
+        border: #{i}px solid black;
+    }
+}
+
+$i: 6;
+
+　　@while $i > 0 {
+　　　　.item-#{$i} { width: 2em * $i; }
+　　　　$i: $i - 2;
+　　}
+```
+
+自定义函数
+```
+@function double($n) {
+    @return $n * 2;
+}
+
+.double-witdh {
+    width: double(5px);
+}
+```
+
+### 块级元素
+一个水平流上面只能单独显示一个元素，多个块级元素则换行显示
+块级元素不等于display: block;
+li display默认值是list-item;
+table display默认值是table;
+但他们都是块级元素.
+
+### transform: scale(-1)
+
+### direction
+正常的文档流都是从左到右，省略也是如此，但是如果希望开头省略末尾的内容完全显示则可以设置direction: rtl;
+
+### 文字下划波浪线
+text-decoration: underline wavy red;

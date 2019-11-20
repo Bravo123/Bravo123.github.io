@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>JS添加大量DOM节点</title>
+</head>
+<body>
+<ul id="js-ul"></ul>
+<script type="text/javascript">
+	(() => {
+		let ndUl = document.getElementById('js-ul');
+		if (!ndUl) {
+			return;
+		}
+
+
+		const total = 30000;
+		const onceSize = 50;
+		const count = total / onceSize;
+		let doneCount = 0;
+
+		function appendItems() {
+			const fragment = document.createDocumentFragment();
+			for (let i=0; i<onceSize; i++) {
+				let ndItem = document.createElement('li');
+				ndItem.innerText = (doneCount * onceSize) + i;
+				fragment.appendChild(ndItem);
+			}
+
+			ndUl.appendChild(fragment);
+			doneCount++;
+			doAppend();
+		}
+
+		function doAppend() {
+			if (doneCount < count) {
+				window.requestAnimationFrame(appendItems);
+			}
+		}
+
+		doAppend();
+
+		// 事件委托
+		// ndUl.addEventListenner('click', function(e) {
+		// 	const target = e.target;
+		// 	if (target.tagName === 'LI') {
+		// 		alert(target.innerHTML);
+		// 	}
+		// });
+
+	})();
+</script>
+</body>
+</html>

@@ -1,0 +1,318 @@
+---
+layout:     post
+title:      "读《前端面试之道》总结"
+subtitle:   " hello es6"
+date:       2019-01-17 17:16:04
+author:     "Thq"
+header-img: "img/contact-bg.jpg"
+catalog: true
+tags:
+    - CSS
+    - JavaScript
+    - HTML
+---
+<p>六种基本数据类型null undefined number boolean string symbol</p>
+<p>引用类型[] {} function</p>
+<p>数字类型是浮点型，不存在整形。NaN属于Number类型，且NaN !== NaN</p>
+
+## 浅拷贝
+```
+Object.assign({}, obj);
+let a = {a: 1};
+let b = {...a};
+```
+
+## 深拷贝
+JSON.parse(JSON.parse(obj))
+会忽略 undefined
+会忽略 symbol
+不能序列化函数
+不能解决循环引用的对象
+```
+let a = {
+    age: undefined,
+    sex: Symbol('male'),
+    jobs: function() {},
+    name: 'yck'
+}
+let b = JSON.parse(JSON.stringify(a))
+console.log(b) // {name: "yck"}
+```
+
+## typeof
+<p>typeof 基本类型除了null为object，其他都是基本类型</p>
+<p>typeof 引用类型除了function是function 其他都是object</p>
+<p>通过Object.prototype.toString.call(a) => [Object Type] Type来获取正确的类型</p>
+<br>
+<p>在条件判断时，除了 undefined， null， false， NaN， ''， 0， -0，其他所有值都转为 true，包括所有对象</p>
+<p>优先级:Symbol.toPrimitive > valueOf > toString</p>
+
+## 运算符
+```
+1 + '1' // '11'
+2 * '2' // 4
+[1, 2] + [1, 2] = '1,22,1'  [1, 2].toString() // 1,2
++ 'b'  // NaN
++ '1'  // 1
+a + + 'b'  // aNaN
+```
+
+## new 
+new 一个对象内部做的处理
+<ul>
+	<li>1、新生成一个对象</li>
+	<li>2、链接到原型</li>
+	<li>3、绑定this</li>
+	<li>4、返回新对象</li>
+</ul>
+
+<p>这个字面量创建是一样的</p>
+
+<p>new运算的优先级</p>
+
+```
+function Foo() {
+    return this;
+}
+Foo.getName = function () {
+    console.log('1');
+};
+Foo.prototype.getName = function () {
+    console.log('2');
+};
+
+new Foo.getName();   // -> 1   new (Foo.getName())
+new Foo().getName(); // -> 2   (new Foo()).getName()
+```
+
+## instanceof 通过判断对象的原型链中是不是能找到类型的 prototype 判断不精准
+```
+let a = [];
+a instanceof Array // true
+a instanceof Object // true
+```
+## this
+```
+function foo() {
+	console.log(this.a)
+}
+var a = 1
+foo()		// 1
+
+var obj = {
+	a: 2,
+	foo: foo
+}
+obj.foo()	 // 2
+
+// 以上两者情况 `this` 只依赖于调用函数前的对象，优先级是第二个情况大于第一个情况
+```
+
+## Symbol.toPrimitive 
+<p>指将被调用的指定函数值的属性转换为相对应的原始值</p>
+
+```
+let user = {
+  name: "John",
+  money: 1000,
+
+  [Symbol.toPrimitive](hint) {
+    console.log(`hint: ${hint}`);
+  }
+};
+
+alert(user) `${user}` // hint: string 
++user // hint: number
+user + 500 // hint: default
+```
+<p>个人理解：具体使用场景为根据传入的数据类型来为对象赋不同的值或者输出相对应的内容</p>
+
+```
+for ( var i=1; i<=5; i++) {
+	setTimeout( function timer() {
+		console.log( i );
+	}, i*1000 );
+}
+
+// 1 利用闭包
+for (var i=1; i<=5; i++) {
+	(function(j) {
+		setTimeout(function timer() {
+			console.log(j)
+		}, j * 1000);
+	})(i)
+}
+
+// 2 let
+for (let i=1; i<=5; i++) {
+	setTimeout(function timer() {
+		console.log(i)
+	}, i * 1000);
+}
+
+// 3 setTimeout 第三个参数
+for (var i=0; i<=5; i++) {
+	setTimeout(function timer(j) {
+		console.log(j)
+	}, i * 1000, i)
+}
+
+// 4 箭头函数
+for (var i=0; i<=5; i++) {
+	setTimeout(() => {
+		console.log(i)
+	}, i * 1000);
+}
+```
+
+## 多维数组降维
+```
+const flattenDeep = (arr) => Array.isArray(arr)
+  ? arr.reduce( (a, b) => [...a, ...flattenDeep(b)] , [])
+  : [arr]
+
+flattenDeep([1, [[2], [3, [4]], 5]])
+```
+
+## Load 和 DOMContentLoaded 区别
+<p>Load 事件触发代表页面中的 DOM，CSS，JS，图片已经全部加载完毕。<br>
+DOMContentLoaded 事件触发代表初始的 HTML 被完全加载和解析，不需要等待 CSS，JS，图片加载
+</p>
+
+## 图层
+<p>一般来说，可以把普通文档流看成一个图层。特定的属性可以生成一个新的图层。不同的图层渲染互不影响，所以对于某些频繁需要渲染的建议单独生成一个新图层，提高性能。但也不能生成过多的图层，会引起反作用。</p>
+
+<p>通过以下几个常用属性可以生成新图层</p>
+
+<ul>
+	<li>3D 变换：translate3d、translateZ</li>
+	<li>will-change</li>
+	<li>video、iframe 标签</li>
+	<li>通过动画实现的 opacity 动画转换</li>
+	<li>position: fixed</li>
+</ul>
+
+## 重绘（Repaint）和回流（reflow）
+<p>重绘：当节点需要更改外观而不会影响布局称为重绘。比如改变color</p>
+<p>回流：布局或几何属性需要改变</p>
+<p>回流必定会发生重绘，重绘不一定会引发回流。回流所需的成本比重绘高的多，改变深层次的节点很可能导致父节点的一系列回流。</p>
+
+## event loop
+<p>event loop是一个执行模型，node.js和不同浏览器的实现不一样</p>
+<p><b>宏任务(marcotask tasks)</b>：一些异步的回调会进入宏任务</p>
+<ul>
+	<li>setTimeout</li>
+	<li>setInterval</li>
+	<li>setImmediate(node.js)</li>
+	<li>requestAnimationFrame(浏览器)</li>
+	<li>I/O</li>
+	<li>UI rendering(浏览器)</li>
+</ul>
+<p><b>微任务(microtask jobs)</b>：其他的一些异步回调</p>
+<ul>
+	<li>process.nextTick(node.js)</li>
+	<li>Promise</li>
+	<li>Object.observe(已废弃)：用于异步观察对象的更改。它提供了一系列发生变化的顺序。但是，此API已被弃用并从浏览器中删除。您可以使用更通用的Proxy对象。</li>
+	<li>MutationObserver：接口提供了监视对DOM树所做更改的能力。它被设计为旧的Mutation Events功能的替代品，该功能是DOM3 Events规范的一部分</li>
+</ul>
+<p>event loop具体实现</p>
+<ul>
+	<li>执行全局Script同步代码，这些同步代码有一些是同步语句，有一些是异步语句（比如setTimeout等）；</li>
+	<li>全局Script代码执行完毕后，调用栈Stack会清空；</li>
+	<li>从微队列microtask queue中取出位于队首的回调任务，放入调用栈Stack中执行，执行完后microtask queue长度减1；</li>
+	<li>继续取出位于队首的任务，放入调用栈Stack中执行，以此类推，直到直到把microtask queue中的所有任务都执行完毕。注意，如果在执行microtask的过程中，又产生了microtask，那么会加入到队列的末尾，也会在这个周期被调用执行；</li>
+	<li>microtask queue中的所有任务都执行完毕，此时microtask queue为空队列，调用栈Stack也为空；</li>
+	<li>取出宏队列macrotask queue中位于队首的任务，放入Stack中执行；</li>
+	<li>执行完毕后，调用栈Stack为空；</li>
+	<li>重复第3-7个步骤；</li>
+</ul>
+![event loop](https://i.ibb.co/KhGFw36/20190213095928.png)
+
+```
+console.log(1);
+
+setTimeout(() => {
+  console.log(2);
+  Promise.resolve().then(() => {
+    console.log(3)
+  });
+});
+
+new Promise((resolve, reject) => {
+  console.log(4)
+  resolve(5)
+}).then((data) => {
+  console.log(data);
+})
+
+setTimeout(() => {
+  console.log(6);
+})
+
+console.log(7);
+```
+
+```
+console.log(1);
+
+setTimeout(() => {
+  console.log(2);
+  Promise.resolve().then(() => {
+    console.log(3)
+  });
+});
+
+new Promise((resolve, reject) => {
+  console.log(4)
+  resolve(5)
+}).then((data) => {
+  console.log(data);
+  
+  Promise.resolve().then(() => {
+    console.log(6)
+  }).then(() => {
+    console.log(7)
+    
+    setTimeout(() => {
+      console.log(8)
+    }, 0);
+  });
+})
+
+setTimeout(() => {
+  console.log(9);
+})
+
+console.log(10);
+
+
+```
+
+<ul>
+	<li>当Event loop执行完Microtasks后,会判断document是否需要更新。因为浏览器是60Hz 的刷新率,每16ms才会更新一次。</li>
+	<li>resize 和 scroll事件自带节流（16ms）触发一次</li>
+	<li>是否触发了media query</li>
+	<li>更新动画并发送事件</li>
+	<li>是否有全屏操作事件</li>
+	<li>执行 requestAnimationFrame 回调</li>
+	<li>执行 IntersectionObserver(可以异步观察目标元素与祖先元素或顶层文件的交集变化)回调，该方法用于判断元素是否可见，可以用于懒加载上，但是兼容性不好</li>
+	<li>更新界面</li>
+	<li>一帧内做的事,有空会去做requestIdleCallback</li>
+</ul>
+
+## 如何减少重绘和回流
+<ul>
+	<li>使用translate代替top</li>
+	<li>visibility代替display:none;前者是repaint、后者是reflow</li>
+	<li>DOM离线修改，把DOM节点先display:none 之后再大量的修改，在显示出来。一次reflow</li>
+	<li>获取节点的属性值会导致回流，比如offsetTop</li>
+	<li>尽量不用table布局</li>
+	<li>动画实现可以借助requestAnimationFrame</li>
+	<li>CSS 选择符从右往左匹配查找，避免 DOM 深度过深。先匹配目标元素，在逐层寻找祖先元素</li>
+</ul>
+
+DNS 预解析
+DNS 解析也是需要时间的，可以通过预解析的方式来预先获得域名所对应的 IP。
+```
+<link rel="dns-prefetch" href="//yuchengkai.cn" />
+```

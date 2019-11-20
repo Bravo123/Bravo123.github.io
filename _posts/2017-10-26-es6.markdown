@@ -1,0 +1,657 @@
+---
+layout:     post
+title:      "es6 I'm coming"
+subtitle:   " hello es6"
+date:       2017-10-26 11:37:04
+author:     "Thq"
+header-img: "img/contact-bg.jpg"
+catalog: true
+tags:
+    - es6 
+    - JavaScript 
+---
+
+# 前言
+励志成为前端的我怎么能不学es6呢？废话少说,就先入门吧,加油↖(^ω^)↗
+
+# let
+有java和c++基础的童鞋对于let还是比较好掌握的
+<br>在js中变量可以不用声明就能直接用(undefined),一开始惊了还有这种操作,写多了才见怪不怪了。
+<br>觉得在es6中提出let之后使js越来越像一门正式的编程语言了吧。
+<br>let:跟java中的类型声明差不多,仅在块级作用域中有效而且使用前必须声明,否则会出现暂时性死区TDZ(代码块之内到变量声明之前,该变量都不可使用),看个例子
+```
+if(true) {
+	//TDZ 开始
+	tmp = 'abc';	//报错
+	console.log(tmp);	//报错
+
+	let tmp;		//TDZ结束
+	console.log(tmp);	//undefined
+
+	tmp = 'abc';	
+	console.log(tmp);	//abc
+}
+```
+<br>以上,有java或者c++基础的很好理解,变量需要先声明再使用
+<br>虽然提出了let来规范语言,但是导致了typeof不再是一个百分百安全的操作
+<br>typeof一个没有定义或者是用var定义的变量的时候是undefined,若变量在下面(非块级区域内)用let定义之后则会报错
+<br>有些死区比较狡猾,很不容易发现,比如说
+```
+function func( x = y, y = 2) {
+	return [x,y];
+}
+func(); //报错
+
+let x = x; //报错
+```
+<br>第一个中,因为x=y的时候y还未定义,所以报错。第二个x也是未定义。
+<br>总结:暂时性死区本质是,只要已进入当前作用域,所有变量就已经存在了,但是必须要等到变量声明之后才能使用和获取。
+<br>let不能重复声明一个变量,函数内部也不能声明形参。很有正式编程语言的风范_(:зゝ∠)_
+<br>es6有了块级作用域的概念,看个例子🌰 
+```
+var temp = 123;
+(function f() {
+	console.log(temp);
+	if(false) {
+		var temp = 2;
+	}
+})(); //undefined
+
+let temp = 123;
+(function f() {
+	console.log(temp);
+	if(false) {
+		let temp = 2;
+	}
+})(); //123
+```
+<br>因为var定义存在变量提升,所以导致第一个输出为undefined;而第二个因为let定义的temp只在它的块级作用域中有效,所以输出还是外面的temp
+<br>引入块级作用域之后,明确了块级作用域中可以声明函数,函数声明类似于let,在块级作用域之外不能使用,在看个🌰
+```
+function f() {console.log(1);}
+
+(function (){
+	if(false) {
+		function f() {console.log(2);}	//在es5中,该行会被提升到函数头部,结果输出的是2;但是在es6中完全不一样了,按理论来说,if块级作用域中f函数不能被访问,应该输出1,可实际上会报错.
+	}	
+	f();
+}());
+```
+<br>在es6中if块级作用域中的f函数相当于一个var的变量,被提升到匿名函数头部,var f = undefined;所以才在es6中报错,而es5中结果是2
+<br>
+# const命令
+<br>声明一个只读的变量,一旦修改则会报错,所以也就意味着一旦声明就应该初始化
+<br>同let命令一样,只在声明所在的块级作用域内有效,不存在提升也存在暂时性死区,一样不能重复声明
+<br>本质:并非变量的值不得改变,而是变量指向的那个内存地址不得改动;对于简单类型的数据(数值、字符串、布尔值),值就保存在指向的内存地址,但对于复合类型的数据呢？比如说对象和数组,变量指向的内存地址只是一个指针,const只能保证这个指针是固定的,甚至数据结构可不可变就不能控制了
+<br>Q:声明一个const对象或者数组,既然只是一个指针,那么是否能对数组或者对象进行操作呢?
+<br>A:是可以的,🌰
+```
+const foo = {};
+foo.prop = 123;	//OK,可以为foo对象添加一个prop属性
+foo = {};		//error,不能指向另一个对象,因为是const声明的_(:зゝ∠)_
+
+const a = [];
+a.push('hello');	//OK
+a.length = 0;		//OK
+a = ['aaa'];		//报错
+```
+<br>如果想把一个对象冻结的话可以用Object.freeze方法
+<br>对象冻结实际上对象的属性也应该冻结,可以用下面的函数将对象彻底冻结(用到了箭头函数,下面才学,看不懂先放一放)
+```
+var constantize = (obj) => {
+		Object.freeze(obj);
+		Object.keys(obj）.forEach(key, i) => {
+			if(typeof obj[key] === 'object') {
+				constantize( obj[key]);
+			}
+		});
+	};
+```
+<br>es6声明变量的方式有六种:var function let const import class,es5中只有var 和 function
+<br>
+<br>在es5中var声明的全局变量与顶层属性挂钩也就是说var a == window.a;
+<br>在es6中将解除这点,用let const class命令声明的全局变量不再属于顶层对象的属性了,也就是let b != window.b(这样写出现了死区,b定义语句还未结束)let b = 1; b != window.b;
+<br>*Q*:为什么呢？这样的目的是什么？
+<br>*A*:看🌰
+```
+	window.a = 10;
+	console.log(a);	//10
+	a = 12;
+	console.log(window.a);	//12
+```
+<br>上面给window对象添加了一个a属性且值为10,然后a=12就直接与window.a挂钩了
+<br>首先没法在编译时报出变量未声明的错误(不理解,好比(页面加载完成没有报错,在交互之后报错？？？)),其次很容易因为打错字而出现全局变量,最后顶层对象的属性是到处可以读写的,不利于模块化编程
+<br>*let和const告一段落了,顶层对象还可以再进一步学习,↖(^ω^)↗*
+<br>
+# 变量的解构赋值
+*数组的解构*
+<br>废话:房子可算落定下来啦,可以好好安心的学习啦 ♪(＾∀＾●)ﾉ
+<br>解构赋值本质上是属于模式匹配,只要等号两边的模式相同,左边的变量就会被赋予对应的值.说的再多,不如看几个例子就明白了.
+```
+let [foo, [[bar], baz]] = [1, [[2], 3]];
+foo // 1
+bar // 2
+baz // 3
+
+let [ , , third] = ['foo', 'bar', 'baz'];
+third // 'baz'
+
+let [x, , y] = [1, 2, 3];
+x // 1
+y // 3
+
+let [head, ...tail] = [1, 2, 3, 4];
+head // 1
+tail // [2, 3, 4]
+
+let [x, y, ...z] = ['a'];
+x // 'a'
+y // undefined
+z // []
+``` 
+<br>解构不成功则值为undefined但不报错,还有一种是不完全解构,即左边的模式,只匹配一部分的等号右边的数组,但解构依然可以成功
+```
+let [x, y] = [1, 2, 3];
+x // 1
+y // 2
+
+let [a, [b], d] = [1, [2, 3], 4];
+a // 1
+b // 2
+d // 4
+```
+<br>上面都是不完全解构,但是都可以成功
+<br>如果等号的右边不是数组(严格的说不是可遍历的结构)则会报错,以下均会报错
+```
+let [foo] = 1;
+let [foo] = false;
+let [foo] = NanN;
+let [foo] = undefined;
+let [foo] = null;
+let [foo] = {};
+```
+<br>以上均会报错,因为等号右边的值要么转为对象以后不具备Iterator接口,要么本身就不具有Iterator结构.
+<br>简单的聊聊Iterator,第一次接错应该是在c++ STL中的迭代器,这个也同理,es6中能遍历的数据类型有四种<em>Array,Object,Map,Set</em>
+<br>上面四种都是集合,那遍历就是很常见的一个需求了.Iterator则提供了一种统一的接口机制,任何的数据结构只要部署了Iterator接口,便可以用类似的方法进行遍历操作 如何部署接口,慢慢来吧,后面会学(◎-◎)
+<br>解构赋值允许指定默认值,赋值内部使用===符号进行判断
+```
+let [foo = true]= [];
+foo // true
+
+let [x, y = 'b'] = ['a'];  // x = 'a' , y ='b'
+let [x, y = 'b'] = ['a', undefined];  // x = 'a', y = 'b';
+let [x = 1] = [null];  // x = null;  默认值不会生效,因为null不严等于undefined
+```
+<br>如果一个默认值是表达式的话,那么这个表达式是惰性求值,即只有在用到的时候才求值
+```
+function f() {
+	console.log('aaa');
+}
+
+let [x = f()] = [1];  //因为  1 !== undefined 所以f() 不会执行;若传的值是undefined的话,f()返回的值也是undefined
+
+let [x = 1, y = x] = [];  // x=1,y=1;
+let [x = 1, y = x] = [2]; // x=2,y=2;
+let [x = 1, y = x] = [1, 2]; //x=1,y=2;
+let [x = y, y = 1] = []; //报错 y为声明 
+```
+*对象的解构*
+<br>对象的结构与数组解构不同的是,数组元素等式两边按次序排列,数组变量的取值与位置有关,而对象只需要变量与属性同名就行
+```
+let {foo, baz} = {foo: "aaa", bar: "bbb"};
+foo // "aaa"
+baz // "bbb"
+
+
+let {baz} = {foo : "aaa"};
+baz // undefined
+
+let {foo: baz} = {foo: 'aaa'};
+baz // 'aaa'
+foo // error: foo is undefined
+//前者是匹配模式,后者才是变量
+
+```
+*疑点*
+```
+let {foo} = {foo: 1};
+console.log(foo); // 1
+let bar1;
+({bar1} = {bar1: 1});
+console.log(bar1);	// 1
+let bar;
+{bar} = {bar: 1};
+console.log(bar);	// 1
+```
+<br>解构也可以用于嵌套结构的对象,同样也能指定默认值(同数组)
+```
+let obj = {
+	p: [
+		'hello',
+		{ y: 'world'}
+	]
+};
+
+let {p: [x, { y }]} = obj;
+
+let {x = 3} = {};
+x // 3
+let {x: y = 3} = {x : 5};
+y // 5
+```
+<br>对象内置的属性也可以用来直接赋值,比如
+```
+let { log, sin, cos} = Math;
+分别对应Math对象的对数 正弦 余弦三个方法
+let arr = [1, 2, 3];
+let {0: first, [arr.length -1]: last} = arr;
+first // 1 
+last // 3
+```
+*字符串的解构赋值*
+<br>字符串被转换成了一个类似数组的对象
+```
+const [a, b, c, d, e] = 'hello';
+
+let {length: len} = 'length';
+len //5
+```
+<br>解构赋值时，等号右边是数字或者布尔值则优先转化为对象。当等号右边不是对象或数组的话则报错,例如
+```
+let {prop: x} = undefined;
+let {prop: y} = null; 
+```
+*那么解构赋值有什么用途呢*
+<br>1.交换变量的值
+```
+let x = 1;
+let y = 2;
+[x, y] = [y, x];
+```
+<br>2.函数返回多个值
+```
+function example() {
+	return [1, 2, 3];
+}
+let [a, b, c] = example();
+
+function example() {
+	return {
+		foo : 1,
+		bar : 2
+	};
+}
+
+let {foo, bar} = example();
+```
+<br>3.函数参数的定义
+```
+function f([x, y, z]) {}
+f([1, 2, 3]);
+
+function f([x, y, z]) {}
+f([z: 3, y: 2, x: 1]);
+```
+<br>4.快速提取json
+```
+let jsonData = {
+	id: '42',
+	status: 'ok',
+	data: [1, 2]
+};
+
+let {id, status, data: number} = jsonData;
+```
+<br>5.函数参数默认值
+<br>6.遍历map结构
+```
+var map = new Map();
+map.set('first', 'hello');
+map.set('second', 'world');
+
+for(let [key, value] of map) {
+	...
+}
+
+//只取键名
+for(let [key] of map){
+	..
+}
+
+//只取键值
+for(let [,value] of map) {
+	..
+}
+```
+<br>7.输入模块的指定方法
+
+# 字符串的扩展
+<br> JavaScript 只有indexOf方法用来确定一个字符串是否包含在另一个字符串中。es6中提供了三种新方法
+<strong>include:</strong>返回布尔值,表示是否找到了参数字符串
+<strong>startsWith:</strong>返回布尔值,表示参数字符串是否在源字符的头部
+<strong>endsWith:</strong>返回布尔值,是否在源字符串的尾部
+都支持第二个参数,表示开始搜素的位置。endsWith除外,第二个参数n指的是n个字符之前
+<strong>repeat(arg)</strong>返回一个新的字符串,表示将原字符串重复arg次,arg为小数时向下取整,负数或者Infinity报错。
+在0到-1之间等同于0,arg为字符串则先转换为数字
+```
+'1'.repeat(1); // '1'
+'1'.repeat(2.9); // '11'
+```
+<strong>padStrat(minLength, string) padEnd</strong>用来补全字符串长度
+```
+正常使用：
+'xxx'.padStart(5, 'ab'); //abxxx
+'xxx'.padEnd(5,'ab'); //xxxab
+
+给定长度 < string.length+源字符长度：
+'abc'.padStart(10,'0123456789'); //'0123456abc'
+'abc'.padEnd(2,'xx'); //abc
+
+string缺省时使用空格代替
+常见用途
+补全指定位数
+'1'.padStart(10, '0'); 	//'0000000001'
+'123'.padStart(10, '0') //'0000000123'
+```
+*模版字符串*
+<br>模版字符串(template string)是增强版的字符串,用反引号(\`)标识。既可以当作普通字符串使用，也可以定义多行字符串,或者在字符串中嵌入变量
+```
+// 普通字符串
+`In js '\n' is a line-feed`
+
+// 多行字符串
+`in js this is
+not legal`
+
+// 字符串中嵌入变量
+var name = 'bob', time = 'today';
+`hello ${name}, how are you ${time}`
+``` 
+*标签模版*
+```
+alert`123`
+alert(123)
+```
+<br>本身其实是一种函数调用的特殊形式,标签指的就是函数,紧跟在后面的模版字符串就是参数,如果参数里面有变量的话就不是简单的调用而是将模版字符串先处理成多个参数
+<br>两种方式将参数按照原来位置拼合回去
+```
+// 通过函数内部的arguments属性
+var total = 10;
+let msg = pass`The total is ${total} ($(total*1.5) with tax)`;
+function pass(s) {
+	var result = '';
+	for(let i=0;i<s.length;i++) {
+		result += s[i];
+		if(i < arguments.length - 1) {
+			result+= arguments[i+1];
+		}
+	}
+	return result;
+}
+
+// 采用rest参数的写法
+...
+```
+*String.raw()*
+!@#$@%$#^
+
+# 正则的扩展
+# 数值的扩展
+# 数组的扩展
+*Array.from*
+<br>将类数组对象和可遍历对象转化为数组
+<br>两个常见的用途(类数组对象)
+```
+let node = document.getElementsByClassName('content');
+Array.from(node).forEach(function() {
+	....
+});
+
+function foo() {
+	var args = Array.from(arguments);
+}
+```
+<br>可遍历对象(具有Iterator接口：字符串、set、map)
+```
+Array.from('hello');
+
+let set = new Set(['a','b']);
+Array.from(set);
+```
+*Array.of()*
+用来弥补Array()的不足,当参数只有一个的时候，参数当作来指定数组的长度
+Array.of()总返回由参数构成的新数组，值得注意的是 Array.of(undefined); //[undefined]
+```
+function ArrayOf(){
+	return [].slice.call(arugments);
+}
+```
+*copyWithin()*
+```
+//es5 复制数组
+let a1 = [1,2,3];
+let a2 = a1.concat();
+
+//es6 复制数组
+a2 = [...a1];
+[...a2] = a1;
+		
+//es5 合并数组
+let arr1 = [1,2,3],
+arr2 = [4,5,6],
+arr3 = [7,8,9];
+arr1.concat(arr2,arr3);
+			
+//es6 合并数组
+[...arr1, ...arr2, ...arr3];
+				
+//Array.from() 将类数组对象转化为真正的数组
+//1.将DOM操作返回的nodeList集合以及函数内部的arguments对象
+let pn = document.getElementsByTagName('p');
+Array.from(pn).forEach((p) => console.log(p));
+[...pn].forEach((p) => console.log(p));
+			
+//2.arguments对象
+function foo() {
+	let arg = Array.from(arguments);
+	arg = [...arguments];
+	}
+			
+//... 与 Array.from 都可以进行转化，是因为这些类数组背后都部署了iterator接口
+//对于没有iterator接口的，但只要有length属性，Array.from依旧可以转换。
+		
+//Array.of 弥补Array()的缺陷
+			
+//copyWithin() 
+//数组实例的copyWithin方法，在当前数组内部，
+//将指定位置的成员复制到其他位置（会覆盖原有成员），
+//然后返回当前数组。也就是说，使用这个方法，会修改当前数组。
+Array.prototype.copyWithin(target, start = 0, end = this.length);
+arr.copyWithin(0,3);
+			
+//find findIndex 与 indexOf 区别
+//后者无法找到数组中的NaN 
+//前者通过Object.is(NaN, value) 实现
+[NaN].findIndex(y => Object.is(NaN, y));
+	
+//fill 数组填充，如果数组有值则抹去
+['a','b','c'].fill(7,1,2);	//['a',7,'c']
+			
+//数组的三个方法 entries()、keys()、values()
+for(let val of ['a', 'b'].values()) {
+	console.log(val);	//'a' 'b'
+}
+			
+for(let key of ['a', 'b'].keys()) {
+	console.log(key);	//0 1	
+}		
+			
+for(let [index, val] of ['a', 'b'].entries()) {
+	console.log(index +" " + val);	//0 'a'   1 'b'
+}
+			
+//includes 返回一个布尔值，判断数组是否包含某个值
+[1,2,3].includes(2,1);	//true	第二个参数表示起始位置
+[NaN].includes(NaN); 	//true	不会像indexOf中使用===判断导致有误
+	
+// Array.prototype.flat(deepth)
+var arr1 = [1, 2, [3, 4]];
+arr1.flat();
+// [1, 2, 3, 4]
+
+var arr2 = [1, 2, [3, 4, [5, 6]]];
+arr2.flat();
+// [1, 2, 3, 4, [5, 6]]
+
+var arr3 = [1, 2, [3, 4, [5, 6]]];
+arr3.flat(2);
+// [1, 2, 3, 4, 5, 6]
+			
+//es5 中都会将数组中的空位给省略掉
+//es6 中都会保留或者是变为undefined; for of也是如此,不会直接省略空位
+//建议不要有空位
+```
+# 函数的扩展
+最近也慢慢开始使用es6的语法了,今天又学习了新技术，看下面这段代码说出你想什么
+```
+function factorial(n, total = 1) {
+	if(n === 1) {
+		return total;
+	} else {
+		return factorial(n - 1, n * total);
+	}
+}
+```
+*尾调用优化*
+*柯里化*
+
+# proxy
+*proxy的get方法实现链式操作*
+```
+var pipe = (function() {
+	return function(value) {
+		var funcStack = [];
+		var proxy = new Proxy({}, {
+			get: function(pipeObject, fnName) {
+				if(fnName === 'get') {
+					return funcStack.reduce(function(val, fn){
+						return fn(val);
+					}, value);
+				}
+				funcStack.push(window[fnName]);
+				return proxy;
+			}
+		});
+		return proxy;
+	}
+}());
+			
+var double = n => n * 2;
+var pow = n => n * n;
+var reverseInt = n => n.toString().split('').reverse().join('') | 0;
+console.log(pipe(3).double.pow.reverseInt.get);	 //63
+```
+
+*proxy get() 实现生成dom节点*
+```
+const dom = new Proxy({},{
+	get(target, property) {
+		return function(attrs = {}, ...children) {
+			const el = document.createNode(property);
+			for(let prop of Object.keys(attrs)) {
+				el.setAttribute(prop, attrs[prop]);
+			}
+			for(let child of children) {
+				if(typeof child === 'string'){
+					child = document.createTextNode(child);
+				}
+				el.appendChild(child);
+			}
+			return el;
+		}
+	}
+});
+
+const el = dom.div({},'hello ',
+		dom.a({href:'http://www.baidu.com'},'world'),
+		dom.ul({},dom.li({},'a'),dom.li({},'b')));
+document.body.appendChild(el);
+```
+
+*通过set get 防止内部属性被读写*
+```
+const handler = {
+	set(target,key,value) {
+		check(key,'set');
+		target[key] = value;
+		return true;
+	},
+	get(target,key) {
+		check(key,'get');
+		return target[key];
+	}
+};
+function check(key,action) {
+	if(key[0] === '_') {
+		throw new Error (`Invalid attempt to ${action} the private "${key}" property`);
+	}
+}
+let oproxy = new Proxy({},handler);
+oproxy._prop;  	//Invalid attempt to get the private _prop property
+```
+
+# Symbol
+*以后用switch的时候可以用下面的技巧*
+```
+// 至于circle和triangle没有必要有值
+const shapeType = {
+	circle : Symbol(),
+	triangle : Symbol()
+};
+
+function getArea(shape, options) {
+	let area = 0;
+	switch(shape) {
+		case shapeType.circle :
+			area = Math.PI * options.R * options.R;
+			break;
+		case shapeType.triangle :
+			area = .5 * options.width * options.height;
+			break;
+	}
+	
+	return area;
+}
+let circleArea = getArea(shapeType.circle, {R: 10});
+let triangleArea = getArea(shapeType.triangle, {width: 10, height: 5});
+```
+Object.getOwnPropertyNames(obj); //返回obj中的属性名 不包括 Symbol属性
+Object.getOwnPropertySymbols(obj); //返回obj的Symbol属性
+Reflect.ownKeys(obj);	//两者都返回
+
+Symbol.for('s');	//如果存在Symbol('s')则返回Symbol('s'),不存在则新建一个,同时登记，供keyFor 和 for进行搜索
+Symbol.keyFor()
+
+# 新增、还未使用的特性
+
+** 代替 Math.pow 
+7**2  // 49 
+<br>Object.keys(obj).map(key => obj[key]); 
+<br>instead of Object.values(obj);
+<br>Object.entries({id: 1, name: 'test'}); // [['id', 1], ['name', 'test']]
+<br>字符串追加padStart(total, string); 默认空格 padEnd同理
+<br>async的另一种用法
+```
+(async () => {
+	const listData = getListData();
+	const otherListData = getOtherListData();
+	await listData;
+	await otherListData;
+})();
+```
+<br>当然使用promise.all更好
+<br>双冒号运算符
+```
+foo::bar ====>  bar.bind(foo);
+foo::bar(...arguments) ====> bar.bind(foo, arugments);
+```

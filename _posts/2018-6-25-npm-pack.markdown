@@ -1,0 +1,43 @@
+---
+layout:     post
+title:      "npm包"
+subtitle:   "项目中用到的一些插件，多看多了解"
+date:       2018-06-25 10:36:04
+author:     "Thq"
+header-img: "img/contact-bg.jpg"
+catalog: true
+tags:
+    - npm 
+---
+
+# ora 
+
+主要用来实现node.js命令行环境的loading效果，和显示各种状态的图标等;
+```
+const ora = require('ora');
+const spinner = ora('building for xxx').start();
+setTimeout(() => {
+	spinner.color = 'green';
+	spinner.text = 'building';
+}, 1000);
+spinner.start();	//开始
+spinner.stop();		//结束
+```
+
+# chalk
+
+修改控制台中字符串的样式（字体样式加粗等／字体颜色／背景颜色）
+```
+const chalk = require('chalk');
+console.log(chalk.red.bold.bgWhite('Hello World'));
+```
+
+# rimraf
+
+以包的形式包装rm -rf命令，用来删除文件和文件夹的，不管文件夹是否为空，都可以删除
+```
+const rimraf = require('rimraf');
+rimraf('./test.txt', function (err) { // 删除当前目录下的 test.txt
+  console.log(err);
+});
+```

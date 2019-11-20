@@ -1,0 +1,200 @@
+
+---
+layout:     post
+title:      "Hello web"
+subtitle:   "web crooked ways"
+date:       2017-10-26 11:19:28
+author:     "Thq"
+header-img: "img/post-bg-2015.jpg"
+catalog: true
+tags:
+    - JavaScript
+    - html
+    - css
+---
+
+汇总了各种本渣渣不会的,但有可能会用到的技术,不定期更新<br>
+————————2017.10.26———————<br>
+# 如何在文本过长的时候出现省略号
+<br>*单行出现省略号,无任何限制.缺陷是不灵活,不能控制行数*
+<br>
+```
+	width:300px;
+	overflow: hidden;
+	text-overflow: ellipsis;	/*ellipsis出现省略号 clip不出现省略号,只是剪切*/
+	white-space: nowrap;
+
+```
+<br>*多行出现省略号,只限制于webkit或移动端(绝大部分的webkit)的浏览器*
+<br>
+```
+	display: -webkit-box;
+	-webkit-line-clamp:2;	/*指定几行出现省略号*/
+	-webkit-box-orient:vertical;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	width:300px;
+```
+<br>*跨浏览器方法:通过省略号图片进行模拟,height是line-height的几倍就是显示几行*
+<br>
+```
+p {
+	position:relative;
+	line-height:1.4em;
+	/* 3 times the line-height to show 3 lines */
+	height:5.6em;
+	overflow:hidden;
+}
+p:after {
+	content:"...";
+	font-weight:bold;
+	position:absolute;
+	bottom:0;
+	right:0;
+	padding:0 20px 1px 45px;
+	background:url(http://newimg88.b0.upaiyun.com/newimg88/2014/09/ellipsis_bg.png) repeat-y;
+}
+```
+<br>
+<br>
+# 鼠标悬停内容自动撑开动画
+<br>重点:max-height属性
+```
+结构
+<ul>
+	  <li>
+	    <div class="hd"> 列表1 </div>
+	    <div class="bd">列表内容<br>内容列表内容<br>内容列表内容<br>内容</div>
+	  </li>
+	  <li>
+	    <div class="hd"> 列表1 </div>
+	    <div class="bd">列表内容<br>内容列表内容<br>内容列表内容<br>内容</div>
+	  </li>
+	  <li>
+	    <div class="hd"> 列表1 </div>
+	    <div class="bd">列表内容<br>内容列表内容<br>内容列表内容<br>内容</div>
+	  </li>
+</ul>
+样式
+.bd {
+		max-height:0;
+		overflow:hidden;
+		transition: all .5s ease-out;
+	}
+li:hover .bd {
+		max-height: 600px;
+		transition-timing-function: ease-in;
+	}
+```
+# 鼠标悬停出现提示信息,通过attr抓取
+<br>利用data-xxx属性,然后用attr进行获取
+```
+结构
+<div data-msg="Open this file Github inDesktop">
+		Hover
+</div>
+样式
+div {
+		width:100px;
+		border:1px solid red;  
+		position:relative;
+		text-align: center;
+}
+div:hover:after {
+		content: attr(data-msg);
+		position: absolute;
+		font-size: 12px;
+		width: 200%;
+		line-height: 30px;
+		text-align: center;
+		left: 0;
+		top: 25px;
+		border: 1px solid lightblue;
+}
+```
+<br>--------------参考来源 http://www.qdfuns.com/notes/47654/27a5169064cac784488e191749f7e74d.html ------
+*让chrome支持比默认12px字体小的字体*
+使用scale()进行缩放
+*修改记住密码后，表单背景颜色是黄色*
+```
+input:-webkit-autofill {
+	background-color: #fff;
+	background-image: none;
+}
+```
+*Math.min()返回的是Infinity，而Math.max()返回的是-Infinity*
+
+# src与href的区别
+<br>src: source的缩写，指向外部资源的位置，指向的内容将会嵌入到文档中当前标签所在的位置；
+<br>href: Hypertext Reference的缩写，指向网络资源所在位置，建立和当前元素或当前文档之间的连接；
+
+# 网页中常用的图片格式
+<br> png-8,png-24,jpeg,gif,svg,WebP
+<br>WebP:谷歌（google）开发的一种旨在加快图片加载速度的图片格式。图片压缩体积大约只有JPEG的2/3，并能节省大量的服务器带宽资源和数据空间。Facebook Ebay等知名网站已经开始测试并使用WebP格式。在质量相同的情况下，WebP格式图像的体积要比JPEG格式图像小40%
+
+<br>看下列代码，p标签内的文字是什么颜色的？
+```
+<style>
+.classA{ color:blue;}
+.classB{ color:red;}
+</style>
+<body>
+<p class='classB classA'> 123 </p>
+</body>
+```
+<br>答案：red。与样式定义在文件中的先后顺序有关，即是后面的覆盖前面的；与class中先后顺序无关;
+
+# 外边距重叠 margin-collapse
+<br>相邻的两个盒子的外边距可以结合成一个单独的外边距，合并方式称为折叠，结合成的外边距称为折叠外边距；并且遵循下面的规则：
+<br>两个相邻的外边距都是正数时，折叠结果是它们两者之间较大的值。
+<br>两个相邻的外边距都是负数时，折叠结果是两者绝对值的较大值。
+<br>两个外边距一正一负时，折叠结果是两者的相加的和。
+
+# rgba()和opacity的透明效果不同之处
+<br>rgba()作用于元素，以及元素内所有内容；
+<br>rgba()只作用于元素的颜色或者其背景色，其子元素不会继承透明效果
+```
+// 移动端点击高亮
+-webkit-tap-highlight-color:rgba(0,0,0,0);	
+```
+## setTimeout
+setTimeout(func, delay, param1, param2, ...)
+第二个参数之后都可以作为func的参数传入
+```
+function a(x, y) {
+    console.log(x, y) // 2 3
+}
+setTimeout(a, 1000, 2, 3)
+```
+
+> 去重 [...new Set(arr)]
+
+> 判断是否是整数 n % 1 === 0
+
+> transform: skew(45deg, 45deg); == visibility: hidden;
+
+## 微信公众号 ios中页面固定不能够被下拉
+```
+<template>
+	<div class="container" @touchmove.prevent></div>
+</template>
+
+.container {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+}
+```
+
+## setState 解构
+```
+res.data[0] = {a:1, b:2, c:3, ........};
+
+const obj = {};
+['a', 'b', 'c'].forEach((v, i) => {
+	obj[v] = res.data[0][v];
+});
+this.setState(obj);
+```

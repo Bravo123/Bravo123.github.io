@@ -1,0 +1,32 @@
+---
+layout:     post
+title:      "小程序踩坑计"
+subtitle:   "小程序目前还是有很多坑坑洼洼的"
+date:       2018-12-19 16:23:04
+author:     "Thq"
+header-img: "img/contact-bg.jpg"
+catalog: true
+tags:
+    - 小程序
+---
+
+<p>在这半年的小程序接触中，陆陆续续也遇到了小程序的许多坑，在这稍微记录下</p>
+
+## video
+<p>目前来说小程序的video组件还是不少的坑，可以持续关注下小程序社区</p>
+
+## padding
+<p>padding-right没有？</p>
+
+## cover-view
+<p>cover-view组件在ios10的版本中用flex布局会看不到</p>
+
+## input 
+<p>input 用background-image会出现两个图形</p>
+<p>iPhoneXS MAX粘贴出现不了</p>
+
+## 分享自定义图片,iOS端不显示,Anroid正常显示
+<p>最近，分享的图片要求加个水印，然后阿里百川正好有提供通过加后缀的形式来加水印，很方便，于是就在图片的后面加上了这样一个后缀“@400h_500w_1e_1c|watermark=1&&object=ZC9ib2ZhbmcucG5n&p=5”，但是发现在Anroid上面分享出来的图片可以显示，然而在iOS不行，调查后发现是转义的问题，iOS不会去自动转义，故需要用下面的代码手动转义替换一下“%40400h_500w_1e_1c%7Cwatermark=1&&object=ZC9ib2ZhbmcucG5n&p=5”，得解</p>
+
+## input 最后一个字消失
+<p>当用手写在input框输入的时候，文字处于有下划线状态的时候点击提交或者选择图片之类的操作会导致处于下划线的文字消失。解决办法是绑定input的blur的事件，在blur的时候手动赋值</p>

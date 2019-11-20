@@ -1,0 +1,113 @@
+## 谢聘超 
+### 网易考拉技术总监 
+<p>06年从无前端时代转向前端(因为ajax和js)  阿贾克斯球队梗</p>
+<br>因为有node.js,前端也更加强大
+<br>国内不比国外差 vue 对抗 angular、weex 对抗 RN
+<br>善于勇于上台分享，收获会比听者更多 
+<br>分享：ppt -> 脑图 -> 脑中有图
+
+## 吴子然 github:elcarim5efil 考拉小程序解决方案megalo 番(megalo Box)
+原生开发体验差，语法跟vue、react相差太多，以前开发者需要额外复出学习成本
+官方推出 WePy增强型16.1K Star 基于Vue 不支持跨端、不支持filter和富文本渲染等
+美团 mpvue15.5K Star 基于Vue 支持H5和小程序
+京东 Taro 13K Star 基于React 跨端（微信、百度、支付宝、字节跳动、H5、RN）
+
+历史原因 网易考拉大部分是RegularJS，社区生态较弱，MPRegular参照mpvue，因为mpvue并不支持原本项目的功能，开发了MPRegular，效果比原生好
+解决的问题：
+filter、富文本渲染等限制、优化性能等
+
+
+Megalo：1K Star 基于Vue 支持更多特性 单页面组件
+开发中：组件库、脚手架、构建工具 完善开发体验、速度
+
+Vue 小程序原生代码比较 template => wxml script => page.js
+原生：service view两部分 servie通过setData去更新view,数据驱动 操作dom比较无力，但是也有NodesRef API获取节点的信息
+Megalo: service => vdom(实例page对象,diff vdom树)  service 跟 vdom对象通信 vdom跟view通信更新视图
+语法映射 @click => bindtap   v-if => wx:if  div => view 
+
+绑定page生命周期
+page onload触发时new Vue()接着vm.$mp.page = page;
+vm => viewModel
+事件代理
+```
+<div @click="bindclick" data-comp-id='1' data-node-id='2'></div>
+```
+触发event事件的时候 带上compid nodeid type参数通过proxy代理到rootVN 根据compid 找到对应的vm 通过 nodeid找到vnode 在通过type找到对应的handler执行
+
+数据映射
+效果：一个商品详情200个sku，原生渲染慢， megalo秒开
+原生：onload的时候把所有定义的数据通过setData 同步到page.data渲染页面; setData频繁调用导致卡顿，setData大量数据时会导致性能问题
+优化点：初始化的时候page.data是empty，需要通过setData更新数据，可能出现不必要大量冗余的数据
+
+模版能力受限 class不接受对象 ：class="obj" {{data || format}} 插值不能filter 
+vm（收集数据，全部渲染） => Page => View
+Megalo： 规避性能问题 vm 和 page.data数据做diff
+通过页面节点挂到page.data上通过page.data上渲染到模版上
+vm(将真正需要的数据挂载到page.data上) => Page => View
+
+Megalo支持更多特性 v-html filter
+now支持支付宝小程序 百度小程序 
+future 头条小程序 H5端 完善配套设施
+
+Q&A:v-html限制
+原生wxParse 不能递归
+octoparse (https://github.com/kaola-fed/octoparse) 最大12层 仍有递归问题
+
+## 勾玉 支付宝小程序 业务团队
+在线 =》 离线包 =》 小程序
+sourceMap 报错定位到具体的代码 编译之后的情况  数据流 多页面通信 a dispatch b页面action
+AnyMock 结合大量业务的mock
+
+## 包勇明 NEI MockStore
+Q：前后端分离是什么
+A：前端开发时无需启动后端工程
+Q：为什么要分离
+A：方便开发 并行开发
+
+面临的问题
+### 接口、页面数据的mock：
+简单的mock 数据写死
+增强型Mock 第三方Mock.js
+
+### NEI Mock Server
+不侵入代码 无跨域问题
+从NEI平台写好接口=>ToolKit导出=>Node.js启动服务
+
+### 是否显著提升开发效率 Mock Server
+对新项目比较友好，
+需要node.js、npm环境
+数据没有意义 集成Mock.js（生成随机数据，拦截Ajax）
+接口之间缺乏关联性
+
+### 利用Mock Store解决上诉玛法
+提供线上环境 避免安装node npm的麻烦
+数据没有意义： 
+内置领域模型（×） 比如网易云音乐人的信息、天气信息、商品信息
+大数据分析（×） 打标签归类
+让用户自己填（√） 在线编辑响应数据、 即时验证数据的正确性、持久化到MongoDB
+接口之间缺乏关联性：
+通过id关联
+功能增强：
+校验入参、实现分页
+
+### 使用场景
+前后端分工程度高，后段接口开发时间高
+
+
+## 徐飞 民工精髓
+### 典型研发流程
+前后端独立构建发布、通过swagger和NEI约定接口规范
+### 前端主导的工程体系
+后端写成配置文件、表和表之间关联很弱
+### 前后端融合模式
+不同环境不同分支，前后端在同一个分支开发，同一个分支构建发布。
+一体化类型传导、测试机制、发布机制
+### 后端主导
+前端场景化视图模版、后端组建为模型到视图的关联和组装、后端构建发布
+
+### 组件化
+前端不分层组件
+前端分层组件 （全局状态管理）
+端到端组件（省市区选择，耦合度低，集成方便）
+
+## Node.js

@@ -1,0 +1,16 @@
+---
+layout:     post
+title:      "计算机常见术语"
+subtitle:   "RT"
+date:       2017-10-26 11:37:04
+author:     "Thq"
+header-img: "img/contact-bg.jpg"
+catalog: true
+tags:
+    - 术语
+---
+
+<br>RT:response time  请求响应时间
+<br>QPS:query per second  系统每秒能处理的请求数
+<br>DDos:distributed Denial of Service 是指攻击者利用大量“肉鸡”对攻击目标发动大量的正常或非正常请求、耗尽目标主机资源或网络资源，从而使被攻击的主机不能为正常用户提供服务。
+<br>Dos:Denial of Service:就是利用合理的服务请求来占用过多的服务资源，从而使合法用户无法得到服务的响应。这是早期非常基本的网络攻击方式。

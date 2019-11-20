@@ -1,0 +1,133 @@
+---
+layout:     post
+title:      "vue && mpvue"
+subtitle:   "let's fxxk it"
+date:       2018-06-23 11:51:04
+author:     "Thq"
+header-img: "img/contact-bg.jpg"
+catalog: true
+tags:
+    - vue
+    - mpvue
+---
+
+> 学习一波vue.js
+
+# v-xx 指令
+
+v-once: 
+v-html: (动态渲染html有危险，容易导致xss攻击，不要对用户提供的内容使用插值)
+v-bind:	缩写':'
+{{js表达式均可以支持;语句和流程控制不会生效}}
+v-if: v-else: v-else-if: 当true的时候才开始渲染，频繁切换的时候会开销较大
+v-on: 缩写'@'
+v-model:
+v-show: 只是切换display属性；初始开始渲染，频繁切换的时候效率高;
+v-for: 同v-if使用的时候，v-for的优先级高;
+
+
+# 计算属性缓存vs方法
+
+两种方式的结果完全一样，但是计算属性缓存是依赖进行缓存的，只有相关依赖
+
+Vue.set()
+vm.$set()
+
+# 事件修饰符
+.stop
+.prevent
+.capture
+.self
+.once
+.passive
+```
+<!-- 阻止单击事件继续传播 -->
+<a v-on:click.stop="doThis"></a>
+
+<!-- 提交事件不再重载页面 -->
+<form v-on:submit.prevent="onSubmit"></form>
+
+<!-- 修饰符可以串联 -->
+<a v-on:click.stop.prevent="doThat"></a>
+
+<!-- 只有修饰符 -->
+<form v-on:submit.prevent></form>
+
+<!-- 添加事件监听器时使用事件捕获模式 -->
+<!-- 即元素自身触发的事件先在此处处理，然后才交由内部元素进行处理 -->
+<div v-on:click.capture="doThis">...</div>
+
+<!-- 只当在 event.target 是当前元素自身时触发处理函数 -->
+<!-- 即事件不是从内部元素触发的 -->
+<div v-on:click.self="doThat">...</div>
+```
+
+# 按键修饰符
+.enter
+.tab
+.delete (捕获“删除”和“退格”键)
+.esc
+.space
+.up
+.down
+.left
+.right
+
+# prop类型检测
+String
+Number
+Boolean
+Array
+Object
+Date
+Function
+Symbol
+也可以自定义一个构造函数，通过instanceof检查确认
+function Person(firstName, lastName) {
+	this.firstName = firstName;
+	this.lastName = lastName;
+}
+
+Vue.component('blog-post', {
+	props: {
+		author: Person
+	}
+});
+
+如果你不希望组件的根元素继承特性，你可以设置在组件的选项中设置 inheritAttrs: false.
+
+# 通过provide和inject完成依赖注入
+provide允许指定提供给后代的方法,在后代中可以使用inject来接收。
+provide: function() {
+	return {
+		getMap: this.getMap
+	}
+}
+
+inject: ['getMap']
+不足：提高了耦合度，提供的属性不是响应式的，可以vuex来进行状态管理
+
+#　页面传值　Vue Router
+两种方式都导航到/user/123
+```
+<router-link :to="{name: 'user', params: {userId: 123}}">User</router-link>
+
+router.push({name: 'user', params: {userId: 123}})
+```
+
+# router.push router.go router.replace
+push向history栈中添加一个新的记录，点后退可以返回。
+go接收一个整数的参数，向前或者后退多少
+replace不对history栈修改，直接替换掉当前的url
+
+# 可以在style标签上添加scoped属性来添加作用域
+
+# 组件
+组件是可复用的vue实例，所以组件也具有data、computed、watch以及生命周期等。
+因为组件是复用的，所以data不能是一个对象而应该是一个函数，因此每个组件实例都有一份对立的对象拷贝。
+为了让组件能够被使用，组件必须得先注册，注册有全局注册和局部注册。
+import Component fron '../component'
+Vue.component('myComponent', Component);
+上面的方式是全局注册，可以在任何vue实例当中被使用。
+局部注册：
+全局注册并不是完美的，当使用了webpack的构建系统时，如果将所有的组件都全局注册的话，就以为着使用的不在是一个组件了，组件都会最终包含在构件结构中，导致构建出来的js文件很大，加载速度缓慢。
