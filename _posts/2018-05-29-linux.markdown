@@ -1,6 +1,6 @@
 ---
 layout:     post
-title:      "Linux常见命令学习末班车"
+title:      "常见命令总结"
 subtitle:   "发车咯发车咯"
 date:       2018-5-29 14:53:04
 author:     "Thq"
@@ -110,3 +110,61 @@ q: 退出
 w: 保存
 wq: 保存离开
 q!: 强制退出
+
+## git
+
+> 打标签
+
+```
+git tag -a v1.4 -m "version 1.4g"
+git push origin v1.4
+```
+
+> 删除本地tag
+
+```
+git tag -d aName
+git push origin :refs/tags/V1.2
+```
+
+> 改远程仓库链接
+
+```
+git remote set-url origin 新的地址
+```
+
+```
+git log  不能查看删除的commit记录
+git reflog 可以查看所有的所有操作记录 包括已经被删除的commit记录
+git cherry-pick <commit id> 对已经存在的commit进行再次提交
+```
+
+> 回到某次commit之前
+
+```
+git reset --soft 
+```
+
+> 修改commit信息
+
+```
+git rebase -i HEAD~5 找到要修改的commit记录 把 pick改为edit
+git commit --amend   修改刚才改为edit的commit信息
+git rebase --continue  会建一个分支，回到原来的分支
+git push -f 强推 覆盖修改的commit
+```
+
+> 删除分支
+
+```
+本地：git branch -d branch-name
+远程：git push -d origin branch-name
+```
+
+> 修改分支名字
+
+```
+git branch -m oldName newName
+git push origin newName
+git branch --set-upstream-to origin/newName
+```
