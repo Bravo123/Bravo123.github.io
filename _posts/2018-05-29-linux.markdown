@@ -68,6 +68,13 @@ ssh -v -l jsmith remotehost.example.com 调试客户端
 ssh -V 客户端版本号
 ```
 
+查看本机密钥
+```
+cat ~/.ssh/id_rsa.pub
+cat ~/.ssh/id_rsa
+```
+
+
 # touch
 <br>有两个功能：一是用于把已存在文件的时间标签更新为系统当前的时间（默认方式），它们的数据将原封不动地保留下来；二是用来创建新的空文件。
 ```
