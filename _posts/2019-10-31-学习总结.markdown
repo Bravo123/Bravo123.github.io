@@ -7,10 +7,10 @@ author:     "Thq"
 header-img: "img/contact-bg.jpg"
 catalog: true
 tags:
-    - HTML CSS JS
+    - 前端
 ---
 
-> cookie 缺点
+## cookie 缺点
 
 <ul>
     <li>每次请求都会被写入header中，浪费流量</li>
@@ -20,18 +20,18 @@ tags:
     <li>一般不可跨域</li>
 </ul>
 
-> 如何让cookie实现跨域
+## 如何让cookie实现跨域
 
 
 
-> React中setState什么时候是同步的，什么时候是异步的
+## React中setState什么时候是同步的，什么时候是异步的
 
 这里的同步和异步指的都是同步执行，并不是真正的同步异步。
 异步指的是多个setState放在一起执行。
 由React引发的事件处理（onClick），调用setState不会同步更新state，除此之外都会同步更新。React在调用事件处理函数之前会调用batchedUpdates函数，这个函数会把isBatchingUpdates值改为true，这个值用来判断是直接更新state还是放到队列中之后再处理。所以React控制的事件处理（包括setTimeout和setInterval产生的异步调用）不会同步更新state。</br>
 关于isBatchingUpdates，默认值为false，当React的事件处理函数或者生命周期触发的时候会改为true，true的时候不会立即更新state值，当更新完成时又会恢复成false。
 
-> 调用堆栈
+## 调用堆栈
 
 Event Loop: 宏任务 setTimeour、setInterval、script  微任务 promise process.nextTick<br/>
 首先进入script脚本 先执行script 遇到宏任务和微任务分别将其分配到不同的Event Queue事件队列当中，当第一个宏任务script执行完成之后、按照顺序（先进先出）调出微任务Event Loop中的事件直至当前Event Loop中所有事件都被执行完成，如果有的话。然后开始新的循环，从宏任务Event Loop中按顺序调出宏任务，执行宏任务，执行过程中遇到的宏任务与微任务按照首次的方式分配到不同的Event Loop当中，当前宏任务执行结束再按顺序调用当前的微任务Event Loop。循环，直到Event Loop都为空。
@@ -76,7 +76,7 @@ setTimeout(function() {
 //打印结果 1 7 6 8 2 4 3 5 9 11 10 12
 ```
 
-> 基本数据类型、值类型
+## 基本数据类型、值类型
 
 null undefined string number bigint symbol boolean 
 
@@ -92,11 +92,11 @@ bar.toUpperCase()
 console.log(bar) // 'baz'
 ```
 
-> 7中基本数据类型的包装对象
+## 7中基本数据类型的包装对象
 
 除了null undefined之外，其他基本数据类型都是对应的包装对象分别是String、Number、Bigint、Symbol、Boolean。 这些也是引用类型
 
-> 自适应加载多倍图
+## 自适应加载多倍图
 
 1. 使用`picture`标签，除了IE其他主流都支持
     ```
@@ -110,3 +110,36 @@ console.log(bar) // 'baz'
     ```
     <img src="photo.png" srcset="photo@2x.png 2x, photo@3x.png 3x" alt="photo" />
     ```
+
+## 前端SEO
+
++ 合理的 title、description、keywords：搜索对着三项的权重逐个减小，title 值强调重点即可，重要关键词出现不要超过 2 次，而且要靠前，不同页面 title 要有所不同；description 把页面内容高度概括，长度合适，不可过分堆砌关键词，不同页面 description 有所不同；keywords 列举出重要关键词即可
++ 语义化的 HTML 代码，符合 W3C 规范：语义化代码让搜索引擎容易理解网页
++ 重要内容 HTML 代码放在最前：搜索引擎抓取 HTML 顺序是从上到下，有的搜索引擎对抓取长度有限制，保证重要内容一定会被抓取
++ 重要内容不要用 js 输出：爬虫不会执行 js 获取内容
++ 少用 iframe：搜索引擎不会抓取 iframe 中的内容
++ 非装饰性图片必须加 alt
++ 提高网站速度：网站速度是搜索引擎排序的一个重要指标
+
+## webpack中的`loader`和`plugin`的区别
+
+`loader`：转换器，把A文件转化成B文件 比如 A.sass => B.css。因为webpack本身只支持`Js`和`JSON`两种格式，其他文件需要通过`loader`将其转换成`webpack`能够解析的文件.
+
+`plugin`：扩展器，丰富了`webpack`，用在打包编译过程中，在对应的事件节点执行对应的任务，比如资源管理，`bundle`文件优化，压缩、环境注入等
+
+## `v-if`、`v-show`和`v-html`原理分别是什么
+
+`v-if` 调用`addIfCondition`方法，生成`VNode`的时候会忽略对应的节点，`render`的时候就不会渲染了。
+
+`v-show` 会生成`VNode`，所以`render`也有真实节点，只是修改节点上的`show`属性。表现为`display: none`
+
+`v-html` 设置`innerHTML`属性的值为`v-html`的值
+
+## 二进制转`Base64`
+
+```
+btoa('123') // MTIz  toBase64
+
+atob('MTIz') // 123  decode
+// btoa => binary to ascii 反之亦然 两者都是window上面的方法
+```
