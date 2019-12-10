@@ -4,7 +4,7 @@ title:      "learing "
 subtitle:   "跟着优秀的人一起学习、总结"
 date:       2019-10-31 18:30:00
 author:     "Thq"
-header-img: "img/contact-bg.jpg"
+header-img: "img/声之形.jpg"
 catalog: true
 tags:
     - 前端
