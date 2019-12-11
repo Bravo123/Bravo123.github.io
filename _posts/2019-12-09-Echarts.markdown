@@ -1,7 +1,7 @@
 ---
 layout:     post
-title:      "learing "
-subtitle:   "工作中遇到的技术疑点————Echarts"
+title:      "Echarts"
+subtitle:   "工作中遇到的技术疑点"
 date:       2019-11-12 18:11:00
 author:     "Thq"
 header-img: "img/声之形.jpg"

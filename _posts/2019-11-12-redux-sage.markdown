@@ -1,7 +1,7 @@
 ---
 layout:     post
-title:      "learing "
-subtitle:   "工作中遇到的技术点总结————Redux-Sage"
+title:      "Redux-Sage "
+subtitle:   "工作中遇到的技术点总结"
 date:       2019-11-12 18:11:00
 author:     "Thq"
 header-img: "img/home-bg-geek.jpg"
