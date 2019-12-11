@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      "learing "
-subtitle:   "工作中遇到的技术点总结————Redux-Sage"
+subtitle:   "工作中遇到的技术疑点————Echarts"
 date:       2019-11-12 18:11:00
 author:     "Thq"
 header-img: "img/声之形.jpg"
@@ -12,5 +12,127 @@ tags:
 
 > 文章主要记录如何利用Echarts实现需求
 
-- 双Y轴
+- 多Y轴
+
+```
+// series 通过 yAxisIndex 字段来确定是属于哪一个y轴
+
+grid: {
+    show: true,
+    left: '3%',
+    right: '10%',
+    bottom: '5%',
+    containLabel: true,
+},
+
+yAxis: [
+    {
+        type: 'value',
+        name: '油压(MPa)',
+        boundaryGap: true,
+    },
+    {
+        type: 'value',
+        name: '伸长量(mm)',
+        boundaryGap: true,
+    },
+    {
+        type: 'value',
+        name: '张拉力(KN)',
+        boundaryGap: true,
+        offset: 120, 
+        // 通过offset偏移是得多根y轴不重叠， 可以通过grid字段来设置图的大小，让y轴有地方显示
+    }
+],
+```
+
 - 给指定区域上色
+
+上色可以通过`markArea`来实现
+
+```
+series: [
+    {
+        name: '张拉力1',
+        type: 'line',
+        stack: 'stretch1',
+        yAxisIndex: 2,
+        data: mockData.map(item => item.stretch1),
+        markArea: {
+            data: [
+                [
+                    {
+                        name: '第一级张拉',
+                        xAxis: 0,
+                        itemStyle: {
+                            color: '#D4E6EF'
+                        }
+                    },
+                    {
+                        xAxis: (mockData1.length / mockData.length) * 100
+                    },
+                ],
+                [
+                    {
+                        name: '第二级张拉',
+                        xAxis: (mockData1.length / mockData.length) * 100,
+                        itemStyle: {
+                        color: '#DDDDEE'
+                        }
+                    },
+                    {
+                        xAxis: 200 // 100并不能完全覆盖整个图表，所以用了200
+                    }
+                ],
+            ]
+        }
+    },
+    {
+        name: '油压1',
+        type: 'line',
+        stack: 'olipressure1',
+        data: mockData.map(item => item.olipressure1)
+    },
+    {
+        name: '顶行程1',
+        type: 'line',
+        stack: 'fixedstroke1',
+        yAxisIndex: 1,
+        data: mockData.map(item => item.fixedstroke1)
+    },
+    {
+        name: '伸长量1',
+        type: 'line',
+        stack: 'dehnbetragm1',
+        yAxisIndex: 1,
+        data: mockData.map(item => item.dehnbetragm1)
+    },
+    {
+        name: '张拉力2',
+        type: 'line',
+        stack: 'stretch2',
+        yAxisIndex: 2,
+        data: mockData.map(item => item.stretch2),
+    },
+    {
+        name: '油压2',
+        type: 'line',
+        stack: 'olipressure2',
+        data: mockData.map(item => item.olipressure2)
+    },
+    {
+        name: '顶行程2',
+        type: 'line',
+        stack: 'fixedstroke2',
+        yAxisIndex: 1,
+        data: mockData.map(item => item.fixedstroke2)
+    },
+    {
+        name: '伸长量2',
+        type: 'line',
+        stack: 'dehnbetragm2',
+        yAxisIndex: 1,
+        data: mockData.map(item => item.dehnbetragm2)
+    },
+],
+```
