@@ -143,3 +143,7 @@ btoa('123') // MTIz  toBase64
 atob('MTIz') // 123  decode
 // btoa => binary to ascii 反之亦然 两者都是window上面的方法
 ```
+
+## `window.top`
+
+工作中嵌入了一个`iframe`，结果`iframe`中的网页用了`top`对象，导致代码报错无法嵌入。寻找解决办法中...
