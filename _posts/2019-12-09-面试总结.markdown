@@ -1,0 +1,171 @@
+---
+layout:     post
+title:      "interview"
+subtitle:   "记录面试中遇到的问题"
+date:       2019-12-16 17:52:00
+author:     "Thq"
+header-img: "img/声之形.jpg"
+catalog: true
+tags:
+    - interview
+---
+
+> 记录面试中被问的问题
+
+## 自我介绍、项目介绍
+
+## 项目中有哪些难点
+
+## emoji表情发送给接口是怎么传输的。  
+
+`Unicode`
+
+## `React`生命周期相关
+
+即将移除的三个生命周期：
+
+```
+componentWillMount
+componentWillUpdate
+componentWillReceiveProps
+```
+
+新增的两个生命周期：
+
+Static getDerivedStateFromProps
+触发时间：组件每次rerender的时候，组件构建之后，每次获取到新的props和state之后
+
+getSnapshotBeforeUpdate
+触发时间：update发生的时候，render之后，dom渲染之前
+
+## Axios
+
+请求拦截：请求发送前进行一些操作，加token，统一处理之类
+
+响应拦截：收到响应后的一些操作，登陆失效，服务器维护
+
+
+## HOC
+
+属性代理：通过包裹原来的组件来操作props
+
+反向继承：返回的组件继承之前的组件
+
+渲染劫持：根据参数决定渲染结果
+
+`HOC`和`Mixin`：`Mixin`会不断给组件增加新的方法、属性，有状态维护、命名冲突等问题。
+
+## event loop 
+
+`Microtask`：`promise`、`Object.observe`
+
+`Marcotask`：`setTimeout`、`setInterval`、`I/O`、`requestAnimationFrame`
+
+## 浅拷贝、深拷贝
+
+基本数据类型直接存储在栈中。
+
+引用数据类型栈中存储的是引用，真实的数据存在堆中。
+
+深拷贝和浅拷贝只是针对Object和Array这种引用数据类型。
+
+浅拷贝：只是复制指针地址，数据存储的地址还是同一块。
+
+深拷贝：创建一个新的对象，数据存储的地址不同。
+
+### 浅拷贝实现：
+`Object.assign()`
+
+`Array.slice()、Array.concat() 返回的新数组都是浅拷贝出来的对象。`
+
+```
+function shallowCopy(src) {
+  Var obj = {};
+  For (var prop in src) {
+    If (src.hasOwnProperty(prop)) {
+      obj[prop] = src[prop]
+    }
+  }
+  Return obj;
+}
+```
+
+### 深拷贝实现：
+
+`Lodash.cloneDeep()`
+
+`JSON.parse(JSON.stringify(arr))`	// 弊端 存在时间对象时会被弄成字符串，RegExp、Error对象序列化之后是空对象，函数和undefined会被丢失，NaN、Infinity会变成null，自能序列化对象的可枚举的自有属性
+
+```
+function deepCopy (source) {
+  const result = source.constructor === Array ? [] : {}; // 用三目运算判断他是数组还是对象
+  for (const key in source) {
+    if (typeof source[key] === 'object') {
+      result[key] = deepCopy(source[key]);
+    } else {
+      result[key] = source[key];
+    }
+  }
+  return result;
+};
+```
+
+## webpack
+
+## `Redux`
+
+`store`：保存数据的地方，整个应用只有一个`store`    `createStore`
+
+`state`： `const state = store.getState()`
+
+`action`: `const action = { type: 'ADD_TODO', payload: 'xxx }`
+
+`dispath`: `store.dispatch(action)`
+
+`Reducer`：纯函数
+
+纯函数：同样的输出一定会得到同样的输出。不改写参数，不调用系统`I/O`，不使用`Date.now()`、`Math.randow()`等不纯的方法
+
+`subscribe`：监听函数，当`state`发生变化的时候自动执行函数
+
+`middleware`：中间件，
+
+```
+const store = createStore(
+    reducer,
+    initial_state,
+    applyMiddleware(logger)
+)
+```
+
+## `React-Redux`
+
+
+UI组件（纯组件）：只负责UI呈现，不带任何业务逻辑，没有状态，所有参数由props提供，不使用`Redux`的`API`
+
+容器组件：只负责数据和业务逻辑，不负责UI的呈现，带有内部状态，使用`Redux`的`API`
+
+`connect()` 通过`connect`方法，生成UI的容器组件。把`state`对象转化成UI组件的`props`，用户通过UI组件发出`Action`，
+
+```
+const VisibleTodoList = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(TodoList)
+```
+
+```
+// 会自动订阅store，每当state更新的时候就会重新计算UI组件的参数，重新渲染
+const mapStateToProps = (state, ownProps) => {
+    return {};
+}
+```
+
+```
+ownProps 容器组件中的props对象
+const mapDispathToProps = (dispath, ownProps) => {
+    return {};
+}
+```
+
+`Provider`组件：基于`context`属性，在根组件包裹一层`Provider` `const { store } = this.context;`
