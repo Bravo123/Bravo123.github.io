@@ -1,11 +1,11 @@
 ---
 layout:     post
 title:      "interview"
-subtitle:   "记录面试中遇到的问题"
+subtitle:   "面试是个人技术提升的阶梯"
 date:       2019-12-16 17:52:00
 author:     "Thq"
 header-img: "img/声之形.jpg"
-catalog: true
+catalog: **true**
 tags:
     - interview
 ---
@@ -169,3 +169,40 @@ const mapDispathToProps = (dispath, ownProps) => {
 ```
 
 `Provider`组件：基于`context`属性，在根组件包裹一层`Provider` `const { store } = this.context;`
+
+## 网络安全防范`XSS`和`CSRF`
+
+## `hooks`相关
+
+### `hooks`和`class`区别
+
+### 如何用`hooks`模拟`class`的`componentDidMount`和`componentWillUnmount`
+
+两者都用`useEffect`模拟，前者通过第二个参数传入`[]`来模拟，后者通过`return function`模拟
+
+## 回顾下`Flex`
+
+## `hash`和`history`路由的区别
+
+`hash`的兼容性更好`url`上面带`#`号,通过通过`hash`值的变化来进行路由跳转
+
+`history.pushState(state, title, url),replaceState不触发跳转. history.go(), history.forward(), history.back()`
+
+## 算法相关
+
+### 如何确定某个单向链表是否有环
+
+双指针（`slow`，`fast`），`slow`指针一次移动一格，`fast`一次移动两格。如果存在环，那么`slow`和`fast`指针的指向必定会有相等的时候。
+
+### `[0, 0, 1, 0, 1, .....]`这样一个无限长的一个数组中如何把所有的0放在左边，1放在右边
+
+- 计算数组的和
+- 头尾指针
+
+## 怎么实现`let`和`const`
+
+`let`: `(function() {var a = 0;console.log(a)})() console.log(a)`
+
+`Object.defineProperty: writable`
+
+`Object.freeze()`
