@@ -174,11 +174,31 @@ const mapDispathToProps = (dispath, ownProps) => {
 
 ## `hooks`相关
 
+`useState`
+
+`useEffect`
+
+`useContext`
+
+`useRef`
+
+`useReducer`
+
+`useLayoutEffect`
+
+`useCallback`
+
+`useMemo`
+
+### `useCallback` 和 `useMemo` 怎么选择
+
 ### `hooks`和`class`区别
 
-### 如何用`hooks`模拟`class`的`componentDidMount`和`componentWillUnmount`
+### 如何用`hooks`模拟`class`的生命周期
 
-两者都用`useEffect`模拟，前者通过第二个参数传入`[]`来模拟，后者通过`return function`模拟
+`componentsDidMount`: `useEffect(() =>{}, [])`
+`componentsDidUpdate`: `useEffect(() =>{})`
+`componentsWillUnmount`: `useEffect() => {return function() {}, []}`
 ![UTOOLS1577352696378.png](https://i.loli.net/2019/12/26/wSPsL936Majkry1.png)
 
 ## 回顾下`Flex`
