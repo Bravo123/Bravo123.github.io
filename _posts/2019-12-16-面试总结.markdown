@@ -5,7 +5,7 @@ subtitle:   "面试是个人技术提升的阶梯"
 date:       2019-12-16 17:52:00
 author:     "Thq"
 header-img: "img/声之形.jpg"
-catalog: **true**
+catalog: true
 tags:
     - interview
 ---
