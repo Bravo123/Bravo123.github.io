@@ -1,0 +1,54 @@
+---
+layout:     post
+title:      "知识点扫雷"
+subtitle:   "学习、记录"
+date:       2019-01-07 15:1:04
+author:     "Thq" 
+header-img: "img/contact-bg.jpg"
+catalog: true
+tags:
+    - CSS
+---
+
+## `CSS`选择器，以及优先级
+
++ !important
++ 内联样式: 1000
++ ID选择器: 0100
++ 类选择器: 0010
++ 属性选择器: 0010
++ 伪类选择器(a:visited，a:actived),单冒号: 0010
++ 类型选择器: 0001
++ 紧邻兄弟选择器(A+B): 0001
++ 一般兄弟选择器(A~B),A、B同父节点,且B在A后面任意位置: 0001
++ 子选择器(A>B)匹配A的直接子节点: 0001
++ 后代选择器(A B): 0001
++ 伪元素选择器(a::before，p::first-line),所有未被包含在HTML的实体,双冒号: 0001
++ 通用选择器: 0000
+
+## BFC
+
+BFC:块级格式化上下文(Block Formatting Context),决定了元素如何对其内容进行定位以及与其他元素的关系和相互作用。
+
+
+## flex
+
+flex: 1; === flex: 1 1 auto; === flex-grow: 1; flex-shrink: 1; flex-basis: auto;
+
+flex-grow: 拉伸因子,默认值为0; flex-shrink: 收缩规则,默认值为1; flex-basis: 元素的初始值,默认值为auto;
+
+## 跨域
+
+CORS和Express proxy代理
+
+iframe：通过postMessage
+
+## GET POST
+
+都是基于TCP链接，本质上无差别，浏览器实现有区别，get参数在url上，post参数在body。post会比get多请求一次，post第一次会通知服务器要请求了，效率差别不大，但是不能用get代替post
+
+## target currentTarget
+
+currentTarget始终是监听事件者，而target是事件的真正发出者。
+
+## position: absolute; 基于border定位
