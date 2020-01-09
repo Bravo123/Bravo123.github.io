@@ -2,7 +2,7 @@
 layout:     post
 title:      "知识点扫雷"
 subtitle:   "学习、记录"
-date:       2019-01-07 15:1:04
+date:       2019-01-07 15:01:04
 author:     "Thq" 
 header-img: "img/contact-bg.jpg"
 catalog: true
@@ -52,3 +52,43 @@ iframe：通过postMessage
 currentTarget始终是监听事件者，而target是事件的真正发出者。
 
 ## position: absolute; 基于border定位
+
+
+## hooks throttle用法
+
+```
+const [praiseNum, setPraiseNum] = useState(0);
+const _throttle = useRef(
+    throttle(newVal => {
+        if (newVal > 0) {
+            livePraise(liveId, newVal).then(res => {
+                setPraiseNum(0);
+            });
+        }
+    }, 3000),
+);
+
+useEffect(() => {
+    _throttle.current(praiseNum);
+}, [praiseNum]);
+
+const praise = () => {
+    setPraiseNum(praiseNum + 1);
+};
+```
+
+## RTPM和HLS
+
+直播常用的两种协议
+
++ RTMP(Real-Time messaging Protocol)
+
+基于Adobe，FlashPlayer，有1-3秒的延迟，推流使用的多
+
++ HTTP-FLV
+
+Adobe公司主推，格式简单，延时低，但手机支持度有限。
+
++ HLS(Http Living Stream)
+
+苹果基于HTTP的流媒体传输协议，H5可以直接打开，直播流是一个m3u8文件，延迟偏高。IOS支持度好

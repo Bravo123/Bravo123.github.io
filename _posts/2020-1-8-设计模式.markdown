@@ -1,0 +1,128 @@
+---
+layout:     post
+title:      "设计模式"
+subtitle:   "Design Patterns"
+date:       2019-01-08 16:54:30
+author:     "Thq" 
+header-img: "img/post-bg-design-patterns.jpg"
+catalog: true
+tags:
+    - CSS
+---
+
+## 工厂模式 
+
++ 简单工厂模式
+
+```JS
+class User {
+    constructor(opt) {
+        this.name = opt.name;
+        this.viewPage = opt.viewPage;
+    }
+
+    static getInstance(role) {
+        switch (role) {
+            case: 'super':
+                return new User({name: '超级管理员'}, viewPage: ['page1', 'page2', 'page3', 'page4']);
+                break;
+            
+            case: 'admin:
+                return new User({name: '管理员'}, viewPage: ['page1', 'page2']);
+                break;
+
+            case: 'user':
+                return new User({name: '用户'}, viewPage: ['page1']);
+                break;
+
+            default: 
+                throw new Error('无效的参数');
+        }
+    }
+}
+
+const super = User.getInstance('super');
+const admin = User.getInstance('admin');
+const user = User.getInstance('user');
+```
+
+优点：只需要传入正确的参数，就可以获得所对应的对象，无须关心创建的具体细节。
+
+缺点：每有新的构造函数添加则都要手动新增，难以维护，当构造函数很多的时候，函数内部非常臃肿。
+
+所以，简单工厂模式只适合创建的对象数量较少，且创建的逻辑不复杂。
+
+
+
++ 工厂方法模式
+
+把创建对象的工作交给子类处理，核心类变成抽象类。与简单工厂不同的是，工厂方法只做实例化对象一件事。
+
+```JS
+class User {
+  constructor(name = '', viewPage = []) {
+    if(new.target === User) {
+      throw new Error('抽象类不能实例化!');
+    }
+    this.name = name;
+    this.viewPage = viewPage;
+  }
+}
+
+class UserFactory extends User {
+  constructor(name, viewPage) {
+    super(name, viewPage)
+  }
+  create(role) {
+    switch (role) {
+      case 'superAdmin': 
+        return new UserFactory( '超级管理员', ['首页', '通讯录', '发现页', '应用数据', '权限管理'] );
+        break;
+      case 'admin':
+        return new UserFactory( '普通用户', ['首页', '通讯录', '发现页'] );
+        break;
+      case 'user':
+        return new UserFactory( '普通用户', ['首页', '通讯录', '发现页'] );
+        break;
+      default:
+        throw new Error('参数错误, 可选参数:superAdmin、admin、user')
+    }
+  }
+}
+
+let userFactory = new UserFactory();
+let superAdmin = userFactory.create('superAdmin');
+let admin = userFactory.create('admin');
+let user = userFactory.create('user');
+```
+
++ 抽象工厂模式
+
+抽象工厂不直接生成实例，而是对于工厂的创建。
+
+```JS
+function getAbstractUserFactory(type) {
+  switch (type) {
+    case 'wechat':
+      return UserOfWechat;
+      break;
+    case 'qq':
+      return UserOfQq;
+      break;
+    case 'weibo':
+      return UserOfWeibo;
+      break;
+    default:
+      throw new Error('参数错误, 可选参数:superAdmin、admin、user')
+  }
+}
+
+
+let WechatUserClass = getAbstractUserFactory('wechat');
+let QqUserClass = getAbstractUserFactory('qq');
+let WeiboUserClass = getAbstractUserFactory('weibo');
+
+let wechatUser = new WechatUserClass('微信小李');
+let qqUser = new QqUserClass('QQ小李');
+let weiboUser = new WeiboUserClass('微博小李');
+```
