@@ -2,7 +2,7 @@
 layout:     post
 title:      "设计模式"
 subtitle:   "Design Patterns"
-date:       2019-01-08 16:54:30
+date:       2020-01-08 16:54:30
 author:     "Thq" 
 header-img: "img/post-bg-design-patterns.jpg"
 catalog: true
