@@ -7,12 +7,12 @@ author:     "Thq"
 header-img: "img/post-bg-design-patterns.jpg"
 catalog: true
 tags:
-    - CSS
+    - Design-Patterns
 ---
 
 ## 工厂模式 
 
-+ 简单工厂模式
+### 简单工厂模式
 
 ```JS
 class User {
@@ -52,9 +52,7 @@ const user = User.getInstance('user');
 
 所以，简单工厂模式只适合创建的对象数量较少，且创建的逻辑不复杂。
 
-
-
-+ 工厂方法模式
+### 工厂方法模式
 
 把创建对象的工作交给子类处理，核心类变成抽象类。与简单工厂不同的是，工厂方法只做实例化对象一件事。
 
@@ -96,7 +94,7 @@ let admin = userFactory.create('admin');
 let user = userFactory.create('user');
 ```
 
-+ 抽象工厂模式
+### 抽象工厂模式
 
 抽象工厂不直接生成实例，而是对于工厂的创建。
 
@@ -113,7 +111,7 @@ function getAbstractUserFactory(type) {
       return UserOfWeibo;
       break;
     default:
-      throw new Error('参数错误, 可选参数:superAdmin、admin、user')
+      throw new Error('参数错误')
   }
 }
 
@@ -125,4 +123,31 @@ let WeiboUserClass = getAbstractUserFactory('weibo');
 let wechatUser = new WechatUserClass('微信小李');
 let qqUser = new QqUserClass('QQ小李');
 let weiboUser = new WeiboUserClass('微博小李');
+```
+
+## 单例模式
+
++ 只有一个实例
++ 能够全局访问
+
+```JS
+const singeTon = function(namne) {
+  this.name = name;
+  this.instance = null;
+}
+
+singeTon.prototype.getName = () => {
+  return this.name;
+}
+
+singeTon.getInstance = (name) => {
+  if (!this.instance) {
+    this.instance = new singleTon(name)
+  }
+  return this.instance;
+}
+
+const a = singleTon.getInstance('a') // 通过 getInstance 来获取实例
+const b = singleTon.getInstance('b')
+console.log(a === b)
 ```
