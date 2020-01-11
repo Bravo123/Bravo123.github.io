@@ -30,7 +30,6 @@ tags:
 
 BFC:块级格式化上下文(Block Formatting Context),决定了元素如何对其内容进行定位以及与其他元素的关系和相互作用。
 
-
 ## flex
 
 flex: 1; === flex: 1 1 auto; === flex-grow: 1; flex-shrink: 1; flex-basis: auto;
@@ -51,12 +50,11 @@ iframe：通过postMessage
 
 currentTarget始终是监听事件者，而target是事件的真正发出者。
 
-## position: absolute; 基于border定位
-
+## position: absolute; 基于非`static`定位的父级的border定位
 
 ## hooks throttle用法
 
-```
+```JS
 const [praiseNum, setPraiseNum] = useState(0);
 const _throttle = useRef(
     throttle(newVal => {
@@ -83,12 +81,12 @@ const praise = () => {
 
 + RTMP(Real-Time messaging Protocol)
 
-基于Adobe，FlashPlayer，有1-3秒的延迟，推流使用的多
+基于Adobe，FlashPlayer，有1-3秒的延迟，推流使用的多 移动端不支持 PC端需基于Flash
 
 + HTTP-FLV
 
-Adobe公司主推，格式简单，延时低，但手机支持度有限。
+Adobe公司主推，格式简单，延时低，但手机支持度有限，iOS支持度不好。
 
 + HLS(Http Living Stream)
 
-苹果基于HTTP的流媒体传输协议，H5可以直接打开，直播流是一个m3u8文件，延迟偏高。IOS支持度好
+苹果基于HTTP的流媒体传输协议，H5可以直接打开，直播流是一个m3u8文件，延迟偏高。IOS支持度好 移动端主流
