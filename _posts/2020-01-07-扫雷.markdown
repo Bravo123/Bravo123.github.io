@@ -90,3 +90,40 @@ Adobe公司主推，格式简单，延时低，但手机支持度有限，iOS支
 + HLS(Http Living Stream)
 
 苹果基于HTTP的流媒体传输协议，H5可以直接打开，直播流是一个m3u8文件，延迟偏高。IOS支持度好 移动端主流
+
+### async/await
+
+```JS
+async function async1(){
+   console.log('async1 start');
+    await async2();
+    console.log('async1 end')
+}
+async function async2(){
+    console.log('async2')
+}
+
+console.log('script start');
+async1();
+console.log('script end')
+
+// 输出顺序：script start->async1 start->async2->script end->async1 end
+```
+
+async 函数返回一个 Promise 对象，当函数执行的时候，一旦遇到 await 就会先返回，等到触发的异步操作完成，再执行函数体内后面的语句。可以理解为，是让出了线程，跳出了 async 函数体。
+
+### BigInt
+
+// 字符串转BigInt
+`BigInt('123') => 123n`
+`BigInt('123') + 1n => 124n`
+`(BigInt('123') + 1n).toString() => 124`
+
+// 2进制转BigInt
+`BigInt('0b' + a)`
+
+// 8进制转BigInt
+`BigInt('0o' + a)`
+
+// 16进制转BigInt
+`BigInt('0x' + a)`
