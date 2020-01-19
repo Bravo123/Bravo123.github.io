@@ -57,7 +57,7 @@ var cookie = {
         }
       }
 ```
-<br>虽然Cookie小还比较麻烦，但是也是不可或缺的；它的作用是与服务器进行交互，作为http规范的一部分存在的。
+<br>虽然Cookie小还比较麻烦，但是也是不可或缺的；它的作用是与服务器进行交互，作为http规范的一部分存在的。XMLHttpRequest中不能手动设置cookie
 
 # sessionStorage
 <br>sessionStorage是h5新引入的，用于本地存储一个会话(session)中的数据；这些数据只有在同一个会话中的页面才能访问，并且当会话结束后数据也随之销毁；因此sessionStorage不是一种持久化的本地存储，仅仅是会话级别的存储

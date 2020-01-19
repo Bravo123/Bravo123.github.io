@@ -127,3 +127,9 @@ async 函数返回一个 Promise 对象，当函数执行的时候，一旦遇�
 
 // 16进制转BigInt
 `BigInt('0x' + a)`
+
+### 浏览器XMLHttpRequest限制
+
+浏览器XMLHttpRequest会限制设置一些敏感的`headers`,比如`cookie, host, referer`.
+
+除此,通过`getAllResponseHeader`总是返回空字符串,当服务器设置`cookie`是`HttpOnly`的时候,JS是无法获取到的,但是在`Application`中可以看.
