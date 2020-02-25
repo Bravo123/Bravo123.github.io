@@ -133,3 +133,20 @@ async 函数返回一个 Promise 对象，当函数执行的时候，一旦遇�
 浏览器XMLHttpRequest会限制设置一些敏感的`headers`,比如`cookie, host, referer`.
 
 除此,通过`getAllResponseHeader`总是返回空字符串,当服务器设置`cookie`是`HttpOnly`的时候,JS是无法获取到的,但是在`Application`中可以看.
+
+### 通过JS的方法编写CSS Animation
+
+```JS
+document.styleSheets[0].insertRule(`@keyframes sport {
+    0% {
+        margin-left: 0;
+    }
+    50% {
+        margin-left: ${290 - width}px;
+    }
+    100% {
+        margin-left: 0;
+    }
+}`);
+textRef.current.style.animation = 'sport 15s infinite';
+```
