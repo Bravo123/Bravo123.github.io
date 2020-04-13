@@ -150,3 +150,64 @@ document.styleSheets[0].insertRule(`@keyframes sport {
 }`);
 textRef.current.style.animation = 'sport 15s infinite';
 ```
+
+### `babel`如何实现`let`
+
+通过变量名转换或者立即执行匿名函数执行
+
+```JS
+// babel转换前
+for (var i = 0; i < 5; i++) {
+    console.log(i)
+}
+console.log(i)
+
+// babel转换后
+for (let _i = 0; _i < 5; _i++) {
+    console.log(_i);
+}
+
+console.log(i)
+
+
+(function() {
+    for (var i = 0; i < 5; i++) {
+        console.log(i);
+    }
+})()
+console.log(i)
+```
+
+### `const`实现
+
+基于`Object.defineProperty`的`writable`属性
+
+```JS
+function _const(key, value) {
+    const desc = {
+        value,
+        writable: false
+    }
+    Object.defineProperty(window, key, desc)
+}
+
+_const('obj', {a: 1})   //定义obj
+obj.b = 2               //可以正常给obj的属性赋值
+obj = {}                //抛出错误，提示对象read-only
+
+```
+
+### 实现`call`
+
+```JS
+// call的语法  fn.call(this, arg1, arg2, ...)
+Function.prototype.myCall = function(thisArgs, ...args) {
+    const fn = Symbol('fn');
+    thisArgs = thisArgs || window;
+    thisArgs[fn] = this;
+    const result = thisArgs[fn](...args);
+    delete thisArgs[fn];
+    return result;
+}
+
+```
