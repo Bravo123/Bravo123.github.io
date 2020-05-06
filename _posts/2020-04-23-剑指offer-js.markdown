@@ -1,0 +1,56 @@
+---
+layout:     post
+title:      "剑指offer-JS-题解"
+subtitle:   "刷刷刷"
+date:       2020-04-23 09:43:30
+author:     "Thq" 
+header-img: "img/post-bg-universe.jpg"
+catalog: true
+tags:
+    - algorithm
+---
+
+> 你爱自由胜过爱我
+
+### 在一个二维数组中（每个一维数组的长度相同），每一行都按照从左到右递增的顺序排序，每一列都按照从上到下递增的顺序排序。请完成一个函数，输入这样的一个二维数组和一个整数，判断数组中是否含有该整数。
+
+```Javascript
+// 普通解法
+function Find(target, array) {
+    let xLen = array.length, yLen = array[0].length;
+    if (target < array[0][0]) return false;
+    if (target > array[xLen - 1][yLen - 1]) return false;
+    let x = 0, y = 0;
+    for (y; y < yLen; y++) {
+        for (x = 0; x < xLen; x++) {
+            if (target >= array[x][y]) {
+                if (target === array[x][y]) return true;
+                continue;
+            }
+            break;
+        }
+    }
+    return false;
+}
+
+// 二分解法
+function Find(target, array) {
+    let xLen = array.length, yLen = array[0].length;
+    if (target < array[0][0]) return false;
+    if (target > array[xLen - 1][yLen - 1]) return false;
+    for (let x = 0; x < xLen; x++) {
+        let low = 0, high = array[0].length;
+        while(low <= high) {
+            let middle = Math.floor((low + high) / 2);
+            if (array[x][middle] === target) {
+                return true;
+            } else if (array[x][middle] > target) {
+                high = middle - 1;
+            } else {
+                low = middle + 1;
+            }
+        }
+    }
+    return false;
+}
+```
