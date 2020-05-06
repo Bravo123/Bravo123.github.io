@@ -1,0 +1,21 @@
+---
+layout:     post
+title:      "SEO"
+subtitle:   "Search engine optimization"
+date:       2020-04-23 09:43:30
+author:     "Thq" 
+header-img: "img/post-bg-universe.jpg"
+catalog: true
+tags:
+    - SEO
+---
+
+## `SEO`是什么
+
+`SEO`: `Search engine optimization`, 搜索引擎优化,是随着搜索引擎出现而出现的,SEO是为了提升网页在搜索引擎里面的权重,使得用户搜索能够出现在前排.
+
+## 原理
+
+## `SPA`
+
+## `SSR`
