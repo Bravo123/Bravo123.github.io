@@ -19,3 +19,7 @@ tags:
 ## `SPA`
 
 ## `SSR`
+
+### `nuxt.js` 和 `next.js`
+
+### 如何通过`nuxt.js`做`SEO`

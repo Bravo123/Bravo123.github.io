@@ -2,9 +2,9 @@
 layout:     post
 title:      "剑指offer-JS-题解"
 subtitle:   "刷刷刷"
-date:       2020-04-23 09:43:30
+date:       2020-05-06 17:43:30
 author:     "Thq" 
-header-img: "img/post-bg-universe.jpg"
+header-img: "img/post-sample-image.jpg"
 catalog: true
 tags:
     - algorithm
@@ -14,7 +14,7 @@ tags:
 
 #### 在一个二维数组中（每个一维数组的长度相同），每一行都按照从左到右递增的顺序排序，每一列都按照从上到下递增的顺序排序。请完成一个函数，输入这样的一个二维数组和一个整数，判断数组中是否含有该整数。
 
-```Javascript
+```Js
 // 普通解法
 function Find(target, array) {
     let xLen = array.length, yLen = array[0].length;
@@ -52,5 +52,49 @@ function Find(target, array) {
         }
     }
     return false;
+}
+```
+
+> 如果云层是天空的一封信 day2
+
+#### 请实现一个函数，将一个字符串中的每个空格替换成“%20”。例如，当字符串为We Are Happy.则经过替换之后的字符串为We%20Are%20Happy
+
+```Js
+// string的replace方法
+function replaceSpace(str) {
+    // write code here
+    return str.replace(/ /g, '%20');
+}
+
+function replaceSpace(str) {
+    // write code here
+    let result = '';
+    for (let i = 0; i < str.length; i++) {
+        if (str[i] === ' ') {
+            result += '%20';
+        } else {
+            result += str[i];
+        }
+    }
+    return result;
+}
+
+```
+
+#### 输入一个链表，按链表从尾到头的顺序返回一个ArrayList 
+
+```Js
+/*function ListNode(x){
+    this.val = x;
+    this.next = null;
+}*/
+function printListFromTailToHead(head) {
+    // write code here
+    var res = [];
+    while (head != null) {
+        res.unshift(head.val);
+        head = head.next;
+    }
+    return res;
 }
 ```
