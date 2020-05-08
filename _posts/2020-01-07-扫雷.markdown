@@ -157,7 +157,7 @@ textRef.current.style.animation = 'sport 15s infinite';
 
 ```JS
 // babel转换前
-for (var i = 0; i < 5; i++) {
+for (let i = 0; i < 5; i++) {
     console.log(i)
 }
 console.log(i)
@@ -210,4 +210,15 @@ Function.prototype.myCall = function(thisArgs, ...args) {
     return result;
 }
 
+```
+
+### 浏览器说话
+
+```Js
+function speak(sentence) {
+    const utterance = new SpeechSynthesisUtterance(sentence)
+    window.speechSynthesis.speak(utterance)
+}
+
+speak('hello world');
 ```
