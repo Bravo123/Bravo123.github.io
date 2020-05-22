@@ -1,0 +1,62 @@
+---
+layout:     post
+title:      “微信H5踩坑"
+subtitle:   ""
+date:       2020-05-06 17:43:30
+author:     "Thq" 
+header-img: "img/post-sample-image.jpg"
+catalog: true
+tags:
+    - algorithm
+---
+
+#### ios url bug => jssign切换页面导致签名失效
+
+对于有路由拦截的框架，比如vue
+
+```JS
+// 在main.js中
+const requireReload = (to, from, next) => {
+  window.isWechat = /MicroMessenger/i.test(navigator.userAgent);
+  // from.name === null 表示直接进入该路由，可以不用刷新
+  if (!window.isWechat || from.name === null) {
+    sessionStorage.removeItem('routeReloaded');
+    return next();
+  }
+  if (!sessionStorage.getItem('routeReloaded')) {
+    const userId = storage.get('fakeid');
+    const wxAccountId = storage.get('wxAccountId');
+    sessionStorage.setItem('routeReloaded', 1);
+    if (to.fullPath.indexOf('?') >= 0) {
+      location.href = `${to.fullPath}&referee_id=${userId}&wechat_account_id=${wxAccountId}`;
+      // location.href = `${to.fullPath}&referee_id=${userId}&wechat_account_id=23`;
+    } else {
+      location.href = `${to.fullPath}?referee_id=${userId}&wechat_account_id=${wxAccountId}`; // 这里也可以用 replace
+      // location.href = `${to.fullPath}?referee_id=${userId}&wechat_account_id=23`;
+    }
+    return;
+  }
+  sessionStorage.removeItem('routeReloaded');
+  next();
+};
+router.beforeEach(requireReload);
+```
+
+```JS
+// 对于不带路由守卫的框架 比如 taro 
+// 记录每次进入的初始列页面的url 每次jssign都用初始页面的url
+```
+
+#### x5同层播放器退出全屏
+
+X5同层播放器没有提供相关API退出全屏，所以只能变向退出全屏
+
+```JS
+// 想要退出全屏
+videoRef.current!.style.display = 'none';
+
+// 在退出全屏的回调中
+videoRef.current.addEventListener('x5videoexitfullscreen', () => {
+    videoRef.current!.style.display = '';
+});
+```
