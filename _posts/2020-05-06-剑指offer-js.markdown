@@ -193,3 +193,85 @@ function jumpFloorII(number) {
     return Math.pow(2, number - 1);
 }
 ```
+
+> day5 
+
+#### 我们可以用2*1的小矩形横着或者竖着去覆盖更大的矩形。请问用n个2*1的小矩形无重叠地覆盖一个2*n的大矩形，总共有多少种方法
+
+```Js
+// 本质还是斐波那契数列
+function rectCover(number) {
+    // write code here
+    if (number === 1) return 1;
+    let f1 = 0; f2 = 1, result = 0;
+    for (let i = 1; i <= number; i++) {
+        result = f1 + f2;
+        f1 = f2;
+        f2 = result;
+    }
+    return result;
+}
+```
+
+#### 输入一个整数，输出该数二进制表示中1的个数。其中负数用补码表示。
+
+```Js
+function NumberOf1(n) {
+    // write code here
+    if(n < 0){
+        n = n >>> 0;  
+    }
+    var arr = n.toString(2).split('1');
+    return arr.length-1;
+}
+```
+
+#### 输入一个整数数组，实现一个函数来调整该数组中数字的顺序，使得所有的奇数位于数组的前半部分，所有的偶数位于数组的后半部分，并保证奇数和奇数，偶数和偶数之间的相对位置不变。
+
+```JS
+function reOrderArray(array) {
+    // write code here
+    let result = [], result1 = [];
+    result = array.filter(item => item % 2 !== 0);
+    result1 = array.filter(item => item % 2 === 0);
+    return result.concat(result1);
+}
+```
+
+#### 数组中有一个数字出现的次数超过数组长度的一半，请找出这个数字。例如输入一个长度为9的数组{1,2,3,2,2,2,5,4,2}。由于数字2在数组中出现了5次，超过数组长度的一半，因此输出2。如果不存在则输出0
+
+```JS
+function MoreThanHalfNum_Solution(numbers)
+{
+    // write code here
+    let limit = numbers.length / 2;
+    let obj = {}, max = 0, value = 0;
+    for (let i = 0; i < numbers.length; i++) {
+        if (!obj[numbers[i]]) {
+            obj[numbers[i]] = 1;
+        } else {
+            obj[numbers[i]]++;
+        }
+    }
+    for (let key in obj) {
+        if (max < obj[key]) {
+            max = obj[key];
+            value = key;
+        }
+    }
+    return max > limit ? value : 0;
+}
+```
+
+#### 输入n个整数，找出其中最小的K个数。例如输入4,5,1,6,2,7,3,8这8个数字，则最小的4个数字是1,2,3,4 
+
+```JS
+function GetLeastNumbers_Solution(input, k)
+{
+    // write code here
+    let arr = input.sort((a, b) => a - b);
+    return k > arr.length ? [] : arr.splice(0, k)
+}
+
+// 堆排
+```
