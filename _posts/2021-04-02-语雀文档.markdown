@@ -1,0 +1,15 @@
+---
+layout:     post
+title:      “语雀链接"
+subtitle:   ""
+date:       2021-04-02 17:05:30
+author:     "Thq" 
+header-img: "img/post-sample-image.jpg"
+catalog: true
+tags:
+    - 日常
+---
+
+> 语雀实在太好用了，github都懒得更新了，索性就把语雀链接搬过来吧
+
+https://www.yuque.com/docs/share/8fb3c198-a9c6-4054-9eb9-a5cbbbeb0f2f?# 《🗓 日常》
